@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mr-avt"
+version = "1.0.0"
+description = "Multi-Resolution Audio-Visual Transformer for speech emotion recognition"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "torch>=2.1.0",
+  "torchaudio>=2.1.0",
+  "numpy>=1.24.0",
+  "pyyaml>=6.0",
+  "scikit-learn>=1.3.0",
+  "tqdm>=4.66.0",
+  "einops>=0.7.0",
+  "matplotlib>=3.8.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["mr_avt*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

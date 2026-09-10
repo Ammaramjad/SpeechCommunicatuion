@@ -1,0 +1,38 @@
+% Standalone method section with every equation implemented in mr_avt/.
+% Intended for the Speech Communication manuscript (elsarticle).
+\section{Proposed Framework}
+\label{sec:method}
+
+This section specifies the Multi-Resolution Audio--Visual Transformer (MR--AVT).
+Given \(X=\{X^{a},X^{v}\}\) the model predicts \(\hat y=f_{\theta}(X)\).
+
+\subsection{Multi-resolution audio encoding}
+Three log-Mel spectrograms (64 bins, 16\,kHz) use analysis windows of 25, 100 and 500\,ms with STFT settings \(400/160/512\), \(1600/400/2048\) and \(8000/1600/8192\). Each branch applies instance normalization, a linear projection into dimension \(d=768\), sinusoidal positional encoding, and a 6-layer pre-norm Transformer (8 heads, FFN 3072, GELU, dropout 0.1). Sequences are padded or cropped to \(T=80\) frames with attention masks.
+
+\subsection{Cross-resolution interaction}
+Branch summaries \(u_r=P_r(\mathrm{Pool}(H_r^{a}))\) exchange information by scaled-dot-product weights \(\omega_{ij}\) in a shared \(d\)-dimensional space. Residual mixing yields \(\hat u_i=u_i+\sum_{j\neq i}\omega_{ij}u_j\). The alignment loss is
+\begin{equation}
+\mathcal L_{\mathrm{align}}=\sum_{i\neq j}\beta_{ij}\big\|P_{ij}(\hat u_i)-\hat u_j\big\|_2^2,
+\end{equation}
+and the audio utterance vector is the query-attention aggregate \(Z^{a}=\sum_r\alpha_r\hat u_r\). Token sequences remain available for the graph.
+
+\subsection{Visual encoding}
+Sixteen aligned \(224\times224\) frames are encoded by a ViT-B/16 backbone. Temporal EMA \(\tilde H_t^{v}=\eta H_t^{v}+(1-\eta)H_{t-1}^{v}\) with \(\eta=0.1\) enforces short-term smoothness. \(Z^{v}\) is the masked mean of \(\tilde H_{1:N}^{v}\).
+
+\subsection{Heterogeneous audio--visual graph}
+Audio nodes are projected tokens \(v^{a}_{r,t}=P_a(H^{a}_{r,t})\) (at most 32 tokens per resolution). Visual nodes are \(v^{v}_{t}=P_v(\tilde H^{v}_{t})\). Edges comprise (i) temporal adjacency within each stream and (ii) \(k=8\) semantic neighbors scored by \(A_{ij}=\exp(-\|z_i-z_j\|_2^2/\tau_g)\) with \(\tau_g=0.5\). Two ELU graph-attention layers with residual updates produce \(\tilde Z^{a}\) and \(\tilde Z^{v}\). Cross-modal consistency is
+\begin{equation}
+\mathcal L_{\mathrm{cm}}=1-\cos\big(P_{\mathrm{cm}}^{a}(\tilde Z^{a}),P_{\mathrm{cm}}^{v}(\tilde Z^{v})\big).
+\end{equation}
+
+\subsection{Uncertainty-aware fusion}
+A Softplus head predicts a positive uncertainty proxy \(\sigma_m^2=g_m(F_m)\) for \(m\in\{a,v\}\). Reliability \(\rho_m=\exp(-\sigma_m^2)\) is normalized to fusion weights \(w_m\) and \(F=w_a F_a+w_v F_v\).
+
+\subsection{Pre-gated branch selection}
+A CNN preview of the short-term Mel spectrogram predicts branch logits. Softmax scores \(\gamma_r\) activate branch \(r\) if \(\gamma_r>0.5\), with argmax fallback so that at least one branch runs. During backbone training all three branches execute; the gate is trained with \(\mathcal L_{\mathrm{gate}}=-\log p_g(r^*(x)\mid F_0)\) where \(r^*\) minimizes the training-set branch cross-entropy. Validation and test labels are never used as gate targets.
+
+\subsection{Learning objective}
+\begin{equation}
+\mathcal L=\lambda_1\mathcal L_{\mathrm{cls}}+\lambda_2\mathcal L_{\mathrm{con}}+\lambda_3\mathcal L_{\mathrm{aug}}+\lambda_4\mathcal L_{\mathrm{cm}}+\lambda_5\mathcal L_{\mathrm{align}}+\lambda_6\mathcal L_{\mathrm{gate}},
+\end{equation}
+with \(\lambda=(1.0,0.5,0.5,0.1,0.1,0.05)\). \(\mathcal L_{\mathrm{con}}\) is supervised contrastive loss (\(\tau_c=0.07\)). \(\mathcal L_{\mathrm{aug}}\) is RBF-kernel MMD between clean fused embeddings and embeddings of a training-set audio perturbation. Optimization uses AdamW (\(10^{-4}\), weight decay \(0.01\)), cosine decay, 10\% warm-up, batch size 32, 100 epochs and early-stopping patience 10.
