@@ -28,17 +28,61 @@ class Sample:
     split: str = "train"
 
 
-def _load_waveform(path: str, sample_rate: int, max_seconds: float) -> torch.Tensor:
+def _resample_linear(wav: torch.Tensor, src_sr: int, dst_sr: int) -> torch.Tensor:
+    if src_sr == dst_sr or wav.numel() == 0:
+        return wav
+    duration = wav.numel() / float(src_sr)
+    new_len = max(1, int(round(duration * dst_sr)))
+    x = wav.view(1, 1, -1)
+    y = torch.nn.functional.interpolate(x, size=new_len, mode="linear", align_corners=False)
+    return y.view(-1)
+
+
+def _read_wav_file(path: Path) -> tuple[torch.Tensor, int]:
     try:
         import torchaudio
 
-        wav, sr = torchaudio.load(path)
+        wav, sr = torchaudio.load(str(path))
         if wav.size(0) > 1:
             wav = wav.mean(dim=0, keepdim=True)
-        if sr != sample_rate:
-            wav = torchaudio.functional.resample(wav, sr, sample_rate)
-        wav = wav.squeeze(0)
+        return wav.squeeze(0), int(sr)
     except Exception:
+        import wave
+
+        with wave.open(str(path), "rb") as handle:
+            sr = handle.getframerate()
+            n_ch = handle.getnchannels()
+            width = handle.getsampwidth()
+            raw = handle.readframes(handle.getnframes())
+        if width == 2:
+            audio = np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768.0
+        elif width == 1:
+            audio = (np.frombuffer(raw, dtype=np.uint8).astype(np.float32) - 128.0) / 128.0
+        else:
+            audio = np.frombuffer(raw, dtype=np.float32)
+        if n_ch > 1:
+            audio = audio.reshape(-1, n_ch).mean(axis=1)
+        return torch.from_numpy(np.ascontiguousarray(audio)), int(sr)
+
+
+def _load_waveform(path: str, sample_rate: int, max_seconds: float) -> torch.Tensor:
+    file_path = Path(path)
+    wav = torch.zeros(0)
+    src_sr = sample_rate
+    if file_path.exists():
+        suffix = file_path.suffix.lower()
+        if suffix == ".npy":
+            wav = torch.from_numpy(np.load(file_path)).float().view(-1)
+        elif suffix == ".pt":
+            wav = torch.load(file_path, weights_only=False)
+            if not torch.is_tensor(wav):
+                wav = torch.as_tensor(wav)
+            wav = wav.float().view(-1)
+        else:
+            wav, src_sr = _read_wav_file(file_path)
+            wav = wav.float().view(-1)
+        wav = _resample_linear(wav, src_sr, sample_rate)
+    if wav.numel() == 0:
         wav = torch.zeros(int(sample_rate * min(1.0, max_seconds)))
     max_len = int(sample_rate * max_seconds)
     if wav.numel() > max_len:
@@ -57,6 +101,8 @@ def _load_frames(path: Optional[str], num_frames: int, image_size: int) -> torch
         if suffix in {".npy"}:
             arr = np.load(path)
             tensor = torch.from_numpy(arr).float()
+            if float(tensor.max()) > 1.5:
+                tensor = tensor / 255.0
             if tensor.dim() == 4 and tensor.size(-1) == 3:
                 tensor = tensor.permute(0, 3, 1, 2)
             frames = [tensor[i] for i in range(min(num_frames, tensor.size(0)))]
@@ -124,21 +170,40 @@ class ManifestDataset(Dataset):
         }
 
 
+def _resolve_media_path(root: Path, value: Optional[str]) -> Optional[str]:
+    if not value:
+        return None
+    media = Path(value)
+    if not media.is_absolute():
+        media = root / media
+    return str(media)
+
+
 def load_manifest(path: str | Path) -> List[Sample]:
     path = Path(path)
+    root = path.parent
     samples: List[Sample] = []
     if path.suffix == ".json":
         rows = json.loads(path.read_text(encoding="utf-8"))
         for row in rows:
-            samples.append(Sample(**row))
+            samples.append(
+                Sample(
+                    audio_path=_resolve_media_path(root, row["audio"]) or "",
+                    video_path=_resolve_media_path(root, row.get("video")),
+                    label=int(row["label"]),
+                    speaker=row.get("speaker", ""),
+                    session=str(row.get("session", "")),
+                    split=row.get("split", "train"),
+                )
+            )
         return samples
     with path.open("r", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
         for row in reader:
             samples.append(
                 Sample(
-                    audio_path=row["audio"],
-                    video_path=row.get("video") or None,
+                    audio_path=_resolve_media_path(root, row["audio"]) or "",
+                    video_path=_resolve_media_path(root, row.get("video")),
                     label=int(row["label"]),
                     speaker=row.get("speaker", ""),
                     session=row.get("session", ""),

@@ -1,0 +1,61 @@
+# Tiny in-repo demo so `train.py` runs without AFEW / BAUM-1s / IEMOCAP.
+seed: 42
+dataset: demo
+data_root: data/demo
+num_classes: 4
+sample_rate: 16000
+n_mels: 8
+max_audio_seconds: 1.0
+num_visual_frames: 8
+image_size: 32
+temporal_frames: 16
+
+resolutions:
+  s:
+    win_length: 32
+    hop_length: 16
+    n_fft: 64
+  m:
+    win_length: 64
+    hop_length: 32
+    n_fft: 128
+  l:
+    win_length: 128
+    hop_length: 64
+    n_fft: 256
+
+model:
+  dim: 64
+  depth: 2
+  heads: 4
+  ffn_dim: 128
+  dropout: 0.1
+  graph_layers: 1
+  graph_heads: 2
+  graph_k: 4
+  graph_tau: 0.5
+  eta: 0.1
+  gate_delta: 0.5
+  contrastive_tau: 0.07
+  graph_token_limit: 8
+  use_pretrained_vit: false
+  patch_size: 16
+
+train:
+  epochs: 3
+  batch_size: 4
+  lr: 1.0e-3
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  patience: 5
+  lambda_cls: 1.0
+  lambda_con: 0.1
+  lambda_aug: 0.1
+  lambda_cm: 0.1
+  lambda_align: 0.1
+  lambda_gate: 0.05
+  num_workers: 0
+  grad_clip: 1.0
+
+eval:
+  metric: wa

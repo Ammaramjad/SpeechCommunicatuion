@@ -107,8 +107,12 @@ def train_one_epoch(
 
 
 def build_loaders(cfg: MRAVTConfig, manifest: Optional[str]) -> Dict[str, DataLoader]:
-    if manifest is None:
-        raise FileNotFoundError("Pass --manifest path/to/manifest.csv")
+    if not manifest:
+        manifest = "data/demo/manifest.csv"
+    if not Path(manifest).exists():
+        raise FileNotFoundError(
+            f"Manifest not found: {manifest}. Bundled demo lives at data/demo/manifest.csv"
+        )
     samples = load_manifest(manifest)
     train_samples = filter_split(samples, "train") or samples
     val_samples = filter_split(samples, "val") or filter_split(samples, "valid")
@@ -251,10 +255,10 @@ def robustness_sweep(model: MRAVT, criterion: MRAVTCriterion, loader: DataLoader
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Train or evaluate MR-AVT")
-    parser.add_argument("--config", default="configs/default.yaml")
-    parser.add_argument("--manifest", required=False)
-    parser.add_argument("--output", default="outputs/mr_avt")
-    parser.add_argument("--device", default="cuda")
+    parser.add_argument("--config", default="configs/demo.yaml")
+    parser.add_argument("--manifest", default="data/demo/manifest.csv")
+    parser.add_argument("--output", default="outputs/demo")
+    parser.add_argument("--device", default="cpu")
     parser.add_argument("--tiny", action="store_true", help="Use the unit-test architecture")
     parser.add_argument("--eval-only", action="store_true")
     parser.add_argument("--checkpoint", default=None)
