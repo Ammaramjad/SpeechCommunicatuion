@@ -51,7 +51,8 @@ async function dash() {
       <div><span class="status">${b.status}</span> <b>${b.id}</b><br/>${b.pickup.name} → ${b.dest.name}<br/>${b.class.name}</div>
       <div>
         <div class="price">${b.quote.symbol}${b.quote.breakdown.total.toLocaleString()}</div>
-        <a class="btn btn-g" href="/track.html?id=${encodeURIComponent(b.id)}">Track</a>
+        <a class="btn btn-p" href="/track.html?id=${encodeURIComponent(b.id)}">Track</a>
+        <a class="btn btn-g" href="/app.html?id=${encodeURIComponent(b.id)}">App</a>
         <a class="btn btn-g" href="/results.html?pickup_id=${b.pickup_id}&dest_id=${b.dest_id}&pax=${b.pax}&bags=${b.bags}">Book again</a>
         ${!["trip_completed","cancelled"].includes(b.status) ? `<button class="btn btn-g" data-c="${b.id}">Cancel</button>` : ""}
       </div></article>`).join("") || "<p>No bookings yet.</p>"}
