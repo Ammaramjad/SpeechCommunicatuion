@@ -6,15 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Confirmed — VELORA</title>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="/assets/css/main.css"/>
-  <link rel="stylesheet" href="/assets/css/apple.css"/>
+  <link rel="stylesheet" href="assets/css/main.css"/>
+  <link rel="stylesheet" href="assets/css/apple.css"/>
 </head>
 <body>
   <div id="chrome-header"></div>
   <main class="ok" id="box"><div class="skel" style="height:200px"></div></main>
   <div id="chrome-footer"></div>
-  <script src="/assets/js/demo-api.js"></script>
-  <script src="/assets/js/core.js"></script>
+  <script src="assets/js/demo-api.js"></script>
+  <script src="assets/js/core.js"></script>
   <script>
     document.getElementById("chrome-header").innerHTML = headerHTML();
     document.getElementById("chrome-footer").innerHTML = footerHTML();
@@ -44,12 +44,12 @@
         </div>
         ${drv}
         <p>
-          <a class="btn btn-p" href="/track.html?id=${encodeURIComponent(b.id)}">${VELORA.t("track")}</a>
-          <a class="btn btn-p" href="/app.html?id=${encodeURIComponent(b.id)}">Open in app</a>
-          <a class="btn btn-g" href="/account.html">View booking</a>
+          <a class="btn btn-p" href="${VELORA.url("/track.html?id=" + encodeURIComponent(b.id))}">${VELORA.t("track")}</a>
+          <a class="btn btn-p" href="${VELORA.url("/app.html?id=" + encodeURIComponent(b.id))}">Open in app</a>
+          <a class="btn btn-g" href="${VELORA.url("/account.html")}">View booking</a>
+          <a class="btn btn-g" href="${VELORA.url("/help.html")}">Support</a>
           <button class="btn btn-g" onclick="window.print()">${VELORA.t("voucher")}</button>
           <a class="btn btn-g" id="calBtn" href="#">Add to calendar</a>
-          <a class="btn btn-g" href="/help.html">Support</a>
         </p>
         <p class="sub">Create an account to manage this booking · confirmation emailed to ${b.email}</p>`;
       const start = (b.when || "").replace(/[-:]/g, "").replace("T", "T") + "00";

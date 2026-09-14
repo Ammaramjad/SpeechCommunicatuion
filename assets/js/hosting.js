@@ -1,4 +1,4 @@
-/** Detect public static hosts (GitHub Pages, Surge) and set asset/API base path. */
+/** Detect GitHub Pages subpath and static hosts before other scripts run. */
 (function () {
   const host = location.hostname;
   let base = "";
@@ -8,9 +8,4 @@
   }
   window.VELORA_SITE_BASE = base;
   window.VELORA_STATIC_HOST = /\.surge\.sh$/i.test(host) || host.endsWith("github.io");
-  if (base) {
-    const el = document.createElement("base");
-    el.href = base + "/";
-    document.head.prepend(el);
-  }
 })();

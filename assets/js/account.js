@@ -28,8 +28,8 @@ function loginForm() {
       const res = await VELORA.post("/api/auth/login", { email: fd.get("email"), password: fd.get("password") });
       VELORA.token = res.token; VELORA.user = res.user;
       localStorage.setItem("vl-token", res.token); localStorage.setItem("vl-user", JSON.stringify(res.user));
-      if (res.user.role === "admin" || res.user.role === "dispatcher") location.href = "/admin.html";
-      else if (res.user.role === "driver") location.href = "/driver.html";
+      if (res.user.role === "admin" || res.user.role === "dispatcher") location.href = VELORA.url("/admin.html");
+      else if (res.user.role === "driver") location.href = VELORA.url("/driver.html");
       else dash();
     } catch { alert("Invalid credentials"); }
   };
@@ -38,7 +38,7 @@ function loginForm() {
   document.getElementById("guest").onsubmit = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    location.href = "/confirm.html?id=" + encodeURIComponent(fd.get("id"));
+    location.href = VELORA.url("/confirm.html?id=" + encodeURIComponent(fd.get("id")));
   };
 }
 
@@ -51,13 +51,13 @@ async function dash() {
       <div><span class="status">${b.status}</span> <b>${b.id}</b><br/>${b.pickup.name} → ${b.dest.name}<br/>${b.class.name}</div>
       <div>
         <div class="price">${b.quote.symbol}${b.quote.breakdown.total.toLocaleString()}</div>
-        <a class="btn btn-p" href="/track.html?id=${encodeURIComponent(b.id)}">Track</a>
-        <a class="btn btn-g" href="/app.html?id=${encodeURIComponent(b.id)}">App</a>
-        <a class="btn btn-g" href="/results.html?pickup_id=${b.pickup_id}&dest_id=${b.dest_id}&pax=${b.pax}&bags=${b.bags}">Book again</a>
+        <a class="btn btn-p" href="${VELORA.url("/track.html?id=" + encodeURIComponent(b.id))}">Track</a>
+        <a class="btn btn-g" href="${VELORA.url("/app.html?id=" + encodeURIComponent(b.id))}">App</a>
+        <a class="btn btn-g" href="${VELORA.url("/results.html?pickup_id=" + b.pickup_id + "&dest_id=" + b.dest_id + "&pax=" + b.pax + "&bags=" + b.bags)}">Book again</a>
         ${!["trip_completed","cancelled"].includes(b.status) ? `<button class="btn btn-g" data-c="${b.id}">Cancel</button>` : ""}
       </div></article>`).join("") || "<p>No bookings yet.</p>"}
     <h2>Saved addresses</h2><p class="sub">Home / Office / Hotel — add from a completed trip.</p>
-    <h2>Support</h2><a class="btn btn-p" href="/help.html">Open a ticket</a>`;
+    <h2>Support</h2><a class="btn btn-p" href="${VELORA.url("/help.html")}">Open a ticket</a>`;
   document.getElementById("out").onclick = () => { localStorage.removeItem("vl-token"); localStorage.removeItem("vl-user"); location.reload(); };
   document.querySelectorAll("[data-c]").forEach((b) => b.onclick = async () => { await VELORA.post("/api/bookings/" + b.dataset.c + "/cancel", {}); dash(); });
 }

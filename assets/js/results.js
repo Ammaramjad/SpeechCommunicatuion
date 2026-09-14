@@ -75,7 +75,7 @@ function draw() {
       <div>
         <div class="price">${r.price.symbol}${r.price.breakdown.total.toLocaleString()}</div>
         <p class="sub">per vehicle · taxes in total</p>
-        <a class="btn btn-p" href="/ride.html?${new URLSearchParams({...body, class_id: r.class.id}).toString()}">${VELORA.t("select")}</a>
+        <a class="btn btn-p" href="${VELORA.url("/ride.html?" + new URLSearchParams({...body, class_id: r.class.id}).toString())}">${VELORA.t("select")}</a>
       </div>
     </article>`).join("");
 }
@@ -84,7 +84,7 @@ function draw() {
   const el = document.getElementById(id);
   if (el) el.addEventListener("change", draw);
 });
-document.getElementById("modify").onclick = () => location.href = "/#search";
+document.getElementById("modify").onclick = () => location.href = VELORA.url("/#search");
 const openF = document.getElementById("openFilters");
 if (openF) openF.onclick = () => document.querySelector(".filters").classList.toggle("open");
 run();
