@@ -55,6 +55,7 @@ function draw() {
     return (b.popular?1:0) - (a.popular?1:0) || a.price.breakdown.total - b.price.breakdown.total;
   });
   document.getElementById("empty").hidden = list.length > 0;
+  document.getElementById("summary").textContent = `${list.length} vehicles · ${document.getElementById("summary").textContent.split(" · ").slice(1).join(" · ") || ""}`;
   document.getElementById("list").innerHTML = list.map((r, i) => `
     <article class="result" style="animation-delay:${i*40}ms">
       <img src="${r.class.img}" alt="${r.class.name}"/>
