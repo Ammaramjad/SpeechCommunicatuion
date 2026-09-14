@@ -107,7 +107,6 @@ function doneView() {
   clearInterval(driverTimer);
   carMarker.setLatLng(drop);
   sheet(`
-    <div class="tick" style="margin:0 auto 10px">✓</div>
     <h2>Trip complete</h2>
     <p>You paid ${RideLook.inr(priceNow())} · Rate Rakesh</p>
     <p class="stars" style="font-size:22px">★★★★★</p>

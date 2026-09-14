@@ -97,9 +97,7 @@ img { max-width: 100%; display: block; }
 .wrap { width: min(1160px, calc(100% - 32px)); margin: 0 auto; }
 
 .hero {
-  background:
-    linear-gradient(180deg, rgba(20, 12, 8, 0.35), rgba(20, 12, 8, 0.55)),
-    url("https://images.unsplash.com/photo-1449965400128-adb8570eec4a?auto=format&fit=crop&w=1800&q=70") center/cover;
+  background: linear-gradient(135deg, #ff8a3d 0%, #ff5b00 42%, #e04e00 100%);
   color: #fff;
   padding: 56px 0 72px;
 }
@@ -170,6 +168,9 @@ img { max-width: 100%; display: block; }
   overflow: hidden;
   box-shadow: var(--shadow);
   border: 1px solid #f0f0f0;
+}
+.card img, .demo-card img, .result img, .gallery img {
+  background: #e8eaed;
 }
 .card img { height: 148px; width: 100%; object-fit: cover; }
 .card-body { padding: 14px; }

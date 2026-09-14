@@ -120,8 +120,9 @@ function initWhen() {
   const el = document.querySelector('[name="when"]');
   const d = new Date();
   d.setDate(d.getDate() + 1);
-  d.setMinutes(0);
-  el.value = d.toISOString().slice(0, 16);
+  d.setHours(10, 0, 0, 0);
+  const pad = (n) => String(n).padStart(2, "0");
+  el.value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   state.when = el.value;
 }
 
