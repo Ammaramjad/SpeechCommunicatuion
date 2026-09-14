@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RideLook Now — Instant taxi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="assets/css/shared.css" />
+</head>
+<body class="taxi-app">
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">R</span> RideLook Now</a>
+    <div class="top-actions">
+      <a class="btn btn-ghost" href="marketplace.html">Marketplace</a>
+      <button class="lang" id="langBtn" type="button">EN / हिं</button>
+    </div>
+  </header>
+  <div style="position:relative;height:100%">
+    <div id="map"></div>
+    <div class="pin-note" id="pinNote">Set drop-off · Connaught Place</div>
+    <div class="sheet" id="sheet"></div>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/taxi.js"></script>
+</body>
+</html>

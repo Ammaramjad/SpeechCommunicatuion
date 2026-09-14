@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RideLook B2C — Customer demos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/shared.css" />
+</head>
+<body class="hub">
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">R</span> RideLook
+    </a>
+    <div class="top-actions">
+      <span class="meta">B2C demo · taxi & cars only</span>
+      <button class="lang" id="langBtn" type="button">EN / हिं</button>
+    </div>
+  </header>
+  <div class="wrap hub-hero">
+    <p class="kicker">Customer pitch · two looks</p>
+    <h1 id="hubTitle">RideLook B2C — taxi & car booking only</h1>
+    <p class="sub" id="hubSub">Klook-style look, but only the transport category. Two customer demos.</p>
+  </div>
+  <div class="wrap demo-grid">
+    <article class="demo-card">
+      <img alt="Airport transfer cars" src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=70" />
+      <div class="pad">
+        <p class="kicker" id="demoA">Demo A · Transfer marketplace</p>
+        <h2>Klook-style catalog</h2>
+        <p class="sub" id="demoABody">Airport pickup, airport drop, hourly private car, intercity. Search → cars → checkout.</p>
+        <a class="btn btn-orange" href="marketplace.html" id="openA">Open marketplace demo</a>
+      </div>
+    </article>
+    <article class="demo-card">
+      <img alt="City taxi" src="https://images.unsplash.com/photo-1485291571150-772bcfc10da5?auto=format&fit=crop&w=1200&q=70" />
+      <div class="pad">
+        <p class="kicker" id="demoB">Demo B · Instant city taxi</p>
+        <h2>Map booking like a taxi app</h2>
+        <p class="sub" id="demoBBody">Book a taxi now on a live map. Choose Mini / Sedan / SUV / Luxury, match a driver, track the ride.</p>
+        <a class="btn btn-orange" href="taxi.html" id="openB">Open taxi demo</a>
+      </div>
+    </article>
+  </div>
+  <footer>
+    <div class="wrap">RideLook is a B2C demo for customer review — not a Klook product. Categories limited to taxi & car booking.</div>
+  </footer>
+  <script src="assets/js/data.js"></script>
+  <script>
+    document.getElementById("langBtn").onclick = () => RideLook.toggleLang();
+    ["hubTitle","hubSub","demoA","demoB","demoABody","demoBBody","openA","openB"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = RideLook.t(id);
+    });
+  </script>
+</body>
+</html>
