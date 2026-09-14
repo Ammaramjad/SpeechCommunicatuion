@@ -31,121 +31,12 @@
       "password": "707ea4a3b2abd7ea26416e7fd3126cf7952e76c117483e18b9f31c7ed154e851"
     }
   ],
-  "sessions": {
-    "a633d469e791683f991f855601f03e34": "u-admin"
-  },
-  "bookings": [
-    {
-      "service": "airport",
-      "mode": "pickup",
-      "pickup_id": "tpe",
-      "dest_id": "taipei-101",
-      "when": "2026-09-15T10:00",
-      "pax": 2,
-      "bags": 2,
-      "hours": 8,
-      "roundtrip": false,
-      "currency": "TWD",
-      "extras": [
-        "meet"
-      ],
-      "stops": [],
-      "class_id": "standard",
-      "promo": "",
-      "first": "Emma",
-      "last": "Chen",
-      "email": "emma@velora.demo",
-      "phone": "+886910000111",
-      "flight": "CI 011",
-      "airline": "",
-      "track_flight": true,
-      "meet": true,
-      "notes": "",
-      "for_someone": false,
-      "passenger_name": "",
-      "payment": "card",
-      "guest": true,
-      "terms": true,
-      "line_id": "",
-      "whatsapp": "",
-      "id": "VR-H95UAF",
-      "public_id": "VR-H95UAF",
-      "otp": "1826",
-      "status": "payment_confirmed",
-      "payment_status": "paid",
-      "driver_id": null,
-      "quote": {
-        "currency": "TWD",
-        "symbol": "NT$",
-        "km": 45.7,
-        "mins": 83,
-        "breakdown": {
-          "base": 1586,
-          "airport": 80,
-          "night": 0,
-          "stops": 0,
-          "extras": 180,
-          "service_fee": 73,
-          "discount": 0,
-          "tolls": "estimated_included",
-          "parking": "separate",
-          "total": 1919
-        },
-        "twd_total": 1919,
-        "extras": [
-          {
-            "id": "meet",
-            "name": "Meet & greet with name sign",
-            "price": 180
-          }
-        ],
-        "class": {
-          "id": "standard",
-          "name": "Standard Sedan",
-          "example": "Toyota Camry or similar",
-          "pax": 3,
-          "bags": 3,
-          "doors": 4,
-          "ac": true,
-          "auto": true,
-          "ev": false,
-          "premium": false,
-          "wheelchair": false,
-          "meet": true,
-          "child": true,
-          "mult": 1.15,
-          "img": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=70"
-        }
-      },
-      "created_at": "2026-09-14T07:33:54.968733+00:00",
-      "user_id": null,
-      "timeline": [
-        {
-          "at": "2026-09-14T07:33:54.968741+00:00",
-          "status": "payment_confirmed",
-          "note": "Paid via card"
-        }
-      ],
-      "audit": [
-        {
-          "at": "2026-09-14T07:33:54.968744+00:00",
-          "who": "guest",
-          "change": "created"
-        }
-      ]
-    }
-  ],
+  "sessions": {},
+  "bookings": [],
   "wishlist": [],
   "tickets": [],
   "events": [],
-  "notifications": [
-    {
-      "at": "2026-09-14T07:33:54.968748+00:00",
-      "event": "booking_created",
-      "booking": "VR-H95UAF",
-      "channel": "email"
-    }
-  ],
+  "notifications": [],
   "audit": [],
   "saved": [],
   "drivers": [
@@ -550,5 +441,57 @@
       "fuel": "electric",
       "status": "active"
     }
-  ]
+  ],
+  "reviews": [
+    {
+      "id": "rv1",
+      "driver_id": "d01",
+      "name": "E. Chen",
+      "stars": 5,
+      "text": "Wei was at T2 with a name sign before we cleared immigration.",
+      "date": "2026-08-12",
+      "verified": true,
+      "punctuality": 5,
+      "cleanliness": 5,
+      "safety": 5
+    },
+    {
+      "id": "rv2",
+      "driver_id": "d01",
+      "name": "M. Sato",
+      "stars": 5,
+      "text": "Quiet cabin, water, and a perfect Xinyi drop-off.",
+      "date": "2026-08-28",
+      "verified": true,
+      "punctuality": 5,
+      "cleanliness": 5,
+      "safety": 5
+    },
+    {
+      "id": "rv3",
+      "driver_id": "d02",
+      "name": "A. Khan",
+      "stars": 4,
+      "text": "Slight traffic delay, Mei messaged ETA twice.",
+      "date": "2026-09-02",
+      "verified": true,
+      "punctuality": 4,
+      "cleanliness": 5,
+      "safety": 5
+    },
+    {
+      "id": "rv4",
+      "driver_id": "d08",
+      "name": "L. Park",
+      "stars": 5,
+      "text": "Yuna’s GLS was immaculate. Kids loved the booster.",
+      "date": "2026-09-05",
+      "verified": true,
+      "punctuality": 5,
+      "cleanliness": 5,
+      "safety": 5
+    }
+  ],
+  "messages": [],
+  "fleet_jobs": []
 }

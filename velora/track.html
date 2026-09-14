@@ -7,8 +7,8 @@
   <title>Live trip — VELORA</title>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <link rel="stylesheet" href="/assets/css/main.css"/>
-  <link rel="stylesheet" href="/assets/css/apple.css"/>
+  <link rel="stylesheet" href="assets/css/main.css"/>
+  <link rel="stylesheet" href="assets/css/apple.css"/>
 </head>
 <body>
   <div id="chrome-header"></div>
@@ -17,9 +17,9 @@
     <aside class="web-sheet" id="sheet"><div class="skel" style="height:180px"></div></aside>
   </main>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="/assets/js/demo-api.js"></script>
-  <script src="/assets/js/core.js"></script>
-  <script src="/assets/js/live.js"></script>
+  <script src="assets/js/demo-api.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/live.js"></script>
   <script>
     document.getElementById("chrome-header").innerHTML = headerHTML();
     bindChrome();
@@ -32,7 +32,7 @@
       LIV.paintMap(map, b);
       const fl = b.live.flight;
       document.getElementById("sheet").innerHTML = `
-        <p class="sub">Live · also in the <a href="/app.html?id=${encodeURIComponent(b.id)}">VELORA app</a></p>
+        <p class="sub">Live · also in the <a href="app.html?id=${encodeURIComponent(b.id)}">VELORA app</a></p>
         <p class="pill">${b.live.headline}</p>
         <div class="eta-num">${b.live.eta_min}<span style="font-size:18px"> min</span></div>
         <h2>${b.pickup.name} → ${b.dest.name}</h2>

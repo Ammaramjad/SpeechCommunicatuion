@@ -124,7 +124,7 @@ async function pay() {
     VELORA.track("payment_attempted");
     const b = await VELORA.post("/api/bookings", form);
     VELORA.track("booking_completed", { id: b.id });
-    location.href = "/confirm.html?id=" + encodeURIComponent(b.id);
+    location.href = VELORA.url("/confirm.html?id=" + encodeURIComponent(b.id));
   } catch (e) {
     document.getElementById("err").textContent = "Payment unsuccessful. Try another method.";
   }

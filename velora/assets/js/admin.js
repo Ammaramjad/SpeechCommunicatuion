@@ -25,7 +25,7 @@ async function paint() {
       </div>
       <p class="sub">Live dispatch runs on the attached Fleet OS — not a rebuilt clone.</p>
       <a class="btn btn-p" href="${FLEET}" target="_blank" rel="noopener">Open Fleet Dispatch</a>
-      <a class="btn btn-g" href="/app.html">Customer app</a>`;
+      <a class="btn btn-g" href="${VELORA.url("/app.html")}">Customer app</a>`;
   }
   if (view === "book") {
     const rows = await VELORA.get("/api/bookings");
@@ -59,7 +59,7 @@ async function paint() {
       paint();
     });
     panel.querySelectorAll("[data-track]").forEach((btn) => btn.onclick = () => {
-      location.href = "/track.html?id=" + encodeURIComponent(btn.dataset.track);
+      location.href = VELORA.url("/track.html?id=" + encodeURIComponent(btn.dataset.track));
     });
     panel.querySelectorAll("[data-ops]").forEach((btn) => btn.onclick = async () => {
       const body = { kind: btn.dataset.k };
@@ -136,7 +136,7 @@ async function paint() {
     panel.innerHTML = `<h1>Drivers & vehicles</h1>` + ds.map((d) => `<div class="panel" style="margin:8px 0">
       <img src="${d.photo}" alt="" width="40" height="40" style="border-radius:50%;vertical-align:middle;margin-right:8px"/>
       <b>${d.first} ${d.last}</b> · ${d.status} · ★ ${d.rating}
-      <a class="chip" href="/api/drivers/${d.id}/profile" target="_blank">Profile</a>
+      <a class="chip" href="${VELORA.url("/api/drivers/" + d.id + "/profile")}" target="_blank">Profile</a>
       <button class="chip" data-t="${d.id}">Toggle</button></div>`).join("");
     panel.querySelectorAll("[data-t]").forEach((b) => b.onclick = async () => { await VELORA.post("/api/drivers/" + b.dataset.t + "/toggle", {}); paint(); });
   }

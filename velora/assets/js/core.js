@@ -7,6 +7,12 @@ window.VELORA = {
   staticMode: Boolean(window.VELORA_STATIC_HOST) || /\.surge\.sh$/i.test(location.hostname) || /\.github\.io$/i.test(location.hostname),
   fleet: "https://fleet-dispatch-demo-8c37.surge.sh/",
   publicUrl: "https://ammaramjad.github.io/SpeechCommunicatuion/",
+  url(path) {
+    const base = window.VELORA_SITE_BASE || "";
+    if (!path || /^https?:\/\//i.test(path) || path.startsWith("mailto:")) return path;
+    if (path.startsWith("/")) return base + path;
+    return path;
+  },
   I18N: {
     en: {
       book: "Book a Ride", airport: "Airport Transfer", hourly: "Hourly Hire", city: "City Transfer",
@@ -86,19 +92,19 @@ function headerHTML(active) {
   return `
   <a class="skip" href="#main">Skip to search</a>
   <header class="header">
-    <a class="brand" href="/"><span class="mark">V</span> VELORA</a>
+    <a class="brand" href="${VELORA.url("/")}"><span class="mark">V</span> VELORA</a>
     <nav class="nav" aria-label="Primary">
-      <a href="/#search" class="${active==="book"?"active":""}">${VELORA.t("book")}</a>
-      <a href="/results.html?service=airport">${VELORA.t("airport")}</a>
-      <a href="/results.html?service=hourly">${VELORA.t("hourly")}</a>
-      <a href="/results.html?service=p2p">${VELORA.t("city")}</a>
-      <a href="/results.html?service=p2p">Intercity</a>
-      <a href="/help.html#corporate">Corporate</a>
-      <a href="/app.html">App</a>
-      <a href="/account.html">${VELORA.t("bookings")}</a>
-      <a href="/help.html">${VELORA.t("help")}</a>
-      <a href="/driver.html">Drivers</a>
-      <a href="/admin.html">Ops</a>
+      <a href="${VELORA.url("/#search")}" class="${active==="book"?"active":""}">${VELORA.t("book")}</a>
+      <a href="${VELORA.url("/results.html?service=airport")}">${VELORA.t("airport")}</a>
+      <a href="${VELORA.url("/results.html?service=hourly")}">${VELORA.t("hourly")}</a>
+      <a href="${VELORA.url("/results.html?service=p2p")}">${VELORA.t("city")}</a>
+      <a href="${VELORA.url("/results.html?service=p2p")}">Intercity</a>
+      <a href="${VELORA.url("/help.html#corporate")}">Corporate</a>
+      <a href="${VELORA.url("/app.html")}">App</a>
+      <a href="${VELORA.url("/account.html")}">${VELORA.t("bookings")}</a>
+      <a href="${VELORA.url("/help.html")}">${VELORA.t("help")}</a>
+      <a href="${VELORA.url("/driver.html")}">Drivers</a>
+      <a href="${VELORA.url("/admin.html")}">Ops</a>
       <a href="${VELORA.fleet}" target="_blank" rel="noopener">Fleet OS</a>
     </nav>
     <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu">Menu</button>
@@ -111,32 +117,32 @@ function headerHTML(active) {
         <option>TWD</option><option>USD</option><option>EUR</option><option>JPY</option>
         <option>KRW</option><option>GBP</option><option>AED</option><option>SAR</option>
       </select>
-      <a class="chip" href="/help.html">${VELORA.t("support")}</a>
-      <a class="btn btn-p" href="/account.html">${VELORA.t("signin")}</a>
+      <a class="chip" href="${VELORA.url("/help.html")}">${VELORA.t("support")}</a>
+      <a class="btn btn-p" href="${VELORA.url("/account.html")}">${VELORA.t("signin")}</a>
     </div>
   </header>
   <div class="nav-drawer" id="navDrawer" hidden>
-    <a href="/#search">${VELORA.t("book")}</a>
-    <a href="/results.html?service=airport">${VELORA.t("airport")}</a>
-    <a href="/results.html?service=hourly">${VELORA.t("hourly")}</a>
-    <a href="/results.html?service=p2p">${VELORA.t("city")}</a>
-    <a href="/results.html?service=p2p">Intercity</a>
-    <a href="/help.html#corporate">Corporate</a>
-    <a href="/app.html">App</a>
-    <a href="/account.html">${VELORA.t("bookings")}</a>
-    <a href="/help.html">${VELORA.t("help")}</a>
-    <a href="/driver.html">Drivers</a>
-    <a href="/admin.html">Ops</a>
+    <a href="${VELORA.url("/#search")}">${VELORA.t("book")}</a>
+    <a href="${VELORA.url("/results.html?service=airport")}">${VELORA.t("airport")}</a>
+    <a href="${VELORA.url("/results.html?service=hourly")}">${VELORA.t("hourly")}</a>
+    <a href="${VELORA.url("/results.html?service=p2p")}">${VELORA.t("city")}</a>
+    <a href="${VELORA.url("/results.html?service=p2p")}">Intercity</a>
+    <a href="${VELORA.url("/help.html#corporate")}">Corporate</a>
+    <a href="${VELORA.url("/app.html")}">App</a>
+    <a href="${VELORA.url("/account.html")}">${VELORA.t("bookings")}</a>
+    <a href="${VELORA.url("/help.html")}">${VELORA.t("help")}</a>
+    <a href="${VELORA.url("/driver.html")}">Drivers</a>
+    <a href="${VELORA.url("/admin.html")}">Ops</a>
     <a href="${VELORA.fleet}" target="_blank" rel="noopener">Fleet OS</a>
   </div>`;
 }
 
 function footerHTML() {
   return `<footer class="footer"><div class="wrap fgrid">
-    <div><b>VELORA</b><a href="/help.html">About</a><a href="/help.html">Contact</a><a href="/help.html">Careers</a></div>
-    <div><b>Services</b><a href="/results.html?service=airport">Airport Transfer</a><a href="/results.html?service=p2p">City Transfer</a><a href="/results.html?service=hourly">Hourly Hire</a></div>
-    <div><b>Partners</b><a href="/driver.html">Driver</a><a href="/admin.html">Operator / Admin</a><a href="/app.html">Customer app</a><a href="${VELORA.fleet}" target="_blank" rel="noopener">Fleet Dispatch</a></div>
-    <div><b>Support</b><a href="/help.html">Help Center</a><a href="/help.html#cancel">Cancellation</a><a href="/help.html#terms">Terms</a><a href="/help.html#privacy">Privacy</a></div>
+    <div><b>VELORA</b><a href="${VELORA.url("/help.html")}">About</a><a href="${VELORA.url("/help.html")}">Contact</a><a href="${VELORA.url("/help.html")}">Careers</a></div>
+    <div><b>Services</b><a href="${VELORA.url("/results.html?service=airport")}">Airport Transfer</a><a href="${VELORA.url("/results.html?service=p2p")}">City Transfer</a><a href="${VELORA.url("/results.html?service=hourly")}">Hourly Hire</a></div>
+    <div><b>Partners</b><a href="${VELORA.url("/driver.html")}">Driver</a><a href="${VELORA.url("/admin.html")}">Operator / Admin</a><a href="${VELORA.url("/app.html")}">Customer app</a><a href="${VELORA.fleet}" target="_blank" rel="noopener">Fleet Dispatch</a></div>
+    <div><b>Support</b><a href="${VELORA.url("/help.html")}">Help Center</a><a href="${VELORA.url("/help.html#cancel")}">Cancellation</a><a href="${VELORA.url("/help.html#terms")}">Terms</a><a href="${VELORA.url("/help.html#privacy")}">Privacy</a></div>
   </div><div class="wrap" style="margin-top:24px;opacity:.7">© VELORA · Private cars with professional drivers · Demo payments never store cards</div></footer>`;
 }
 

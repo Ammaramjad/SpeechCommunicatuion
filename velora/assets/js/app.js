@@ -106,7 +106,7 @@ async function render() {
       <div class="ios-card">
         <h3>Same account as the site</h3>
         <p class="comment">${VELORA.user ? VELORA.user.email : "Guest · bookings still work"}</p>
-        <a class="ios-btn blue" href="/account.html" style="display:block;text-align:center">Sign in on web</a>
+        <a class="ios-btn blue" href="${VELORA.url("/account.html")}" style="display:block;text-align:center">Sign in on web</a>
       </div>
       <div class="ios-card">
         <h3>Also coming</h3>
