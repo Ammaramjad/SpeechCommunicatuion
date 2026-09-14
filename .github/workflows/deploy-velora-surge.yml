@@ -12,23 +12,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Skip without Surge token
-        if: ${{ secrets.SURGE_TOKEN == '' }}
-        run: |
-          echo "SURGE_TOKEN not set — skipping Surge deploy."
-          echo "Use GitHub Pages (gh-pages branch) or add SURGE_TOKEN to repo secrets."
-
       - uses: actions/checkout@v4
-        if: ${{ secrets.SURGE_TOKEN != '' }}
 
-      - name: Install Surge
-        if: ${{ secrets.SURGE_TOKEN != '' }}
-        run: npm install -g surge
-
-      - name: Export catalog for static demo
-        if: ${{ secrets.SURGE_TOKEN != '' }}
-        working-directory: velora
+      - name: Publish to Surge (optional)
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
         run: |
+          if [ -z "$SURGE_TOKEN" ]; then
+            echo "SURGE_TOKEN not set — skipping Surge deploy."
+            echo "Use GitHub Pages (gh-pages branch) or add SURGE_TOKEN to repo secrets."
+            exit 0
+          fi
+          npm install -g surge
+          cd velora
           python3 <<'PY'
           import json
           from catalog import *
@@ -48,10 +44,4 @@ jobs:
           }
           Path("data/catalog.json").write_text(json.dumps(cat, ensure_ascii=False, indent=2))
           PY
-
-      - name: Publish public demo URL
-        if: ${{ secrets.SURGE_TOKEN != '' }}
-        working-directory: velora
-        env:
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-        run: surge . velora-private-rides.surge.sh --token "$SURGE_TOKEN"
+          surge . velora-private-rides.surge.sh --token "$SURGE_TOKEN"
