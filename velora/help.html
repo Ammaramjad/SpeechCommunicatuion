@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Help — VELORA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/assets/css/main.css"/>
+</head>
+<body>
+  <div id="chrome-header"></div>
+  <main class="wrap sec">
+    <h1>Help Center</h1>
+    <div class="cards" id="cats"></div>
+    <form class="panel" id="ticket" style="margin-top:24px">
+      <h2>Open a support case</h2>
+      <div class="field">Category
+        <select name="category"><option>Booking</option><option>Payment</option><option>Cancellation</option><option>Driver</option><option>Airport Pickup</option><option>Lost Property</option><option>Refund</option><option>Account</option></select>
+      </div>
+      <div class="field">Booking ID (optional)<input name="booking_id"/></div>
+      <div class="field">Message<textarea name="message" required></textarea></div>
+      <button class="btn btn-p" type="submit">Send</button>
+      <p class="sub" id="ok"></p>
+    </form>
+    <div class="acc" id="faq"></div>
+    <section id="terms" class="panel"><h2>Terms</h2><p class="sub">Demo marketplace. Do not enter real payment cards. Cancellation examples: free &gt;24h, partial 6–24h, none &lt;6h — admin-configurable in production.</p></section>
+    <section id="privacy" class="panel"><h2>Privacy</h2><p class="sub">Guest email is used only to retrieve a booking. Passwords are hashed. Card PAN is never stored.</p></section>
+    <section id="cancel" class="panel"><h2>Cancellation</h2><p class="sub">Shown on each vehicle card before you pay. Refunds follow the rule on the voucher.</p></section>
+  </main>
+  <div id="chrome-footer"></div>
+  <script src="/assets/js/core.js"></script>
+  <script>
+    document.getElementById("chrome-header").innerHTML = headerHTML();
+    document.getElementById("chrome-footer").innerHTML = footerHTML();
+    bindChrome();
+    VELORA.get("/api/catalog").then((c) => {
+      document.getElementById("cats").innerHTML = c.help.map((h) => `<article class="card"><div class="pad"><h3>${h.title}</h3></div></article>`).join("");
+      document.getElementById("faq").innerHTML = c.faq.map((f) => `<details><summary>${f.q}</summary><p class="sub">${f.a}</p></details>`).join("");
+    });
+    document.getElementById("ticket").onsubmit = async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const t = await VELORA.post("/api/tickets", { category: fd.get("category"), message: fd.get("message"), booking_id: fd.get("booking_id") });
+      document.getElementById("ok").textContent = "Case " + t.id + " opened. Live chat is a future channel.";
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+const FLEET = "https://fleet-dispatch-demo-8c37.surge.sh/";
+let view = "dash";
+let catalog;
+
+async function paint() {
+  const panel = document.getElementById("panel");
+  if (view === "dash") {
+    const m = await VELORA.get("/api/admin/metrics");
+    panel.innerHTML = `<h1>Today</h1>
+      <div class="kpis">
+        <div class="kpi">Bookings <b>${m.bookings}</b></div>
+        <div class="kpi">Pending <b>${m.pending}</b></div>
+        <div class="kpi">Active rides <b>${m.active}</b></div>
+        <div class="kpi">GMV <b>NT$${m.gmv.toLocaleString()}</b></div>
+        <div class="kpi">Avg ticket <b>NT$${m.avg.toLocaleString()}</b></div>
+        <div class="kpi">Drivers online <b>${m.drivers_online}</b></div>
+        <div class="kpi">Vehicles <b>${m.vehicles}</b></div>
+        <div class="kpi">Conversion <b>${m.conversion}%</b></div>
+      </div>
+      <p class="sub">Live dispatch runs on the attached Fleet OS — not a rebuilt clone.</p>
+      <a class="btn btn-p" href="${FLEET}" target="_blank" rel="noopener">Open Fleet Dispatch</a>`;
+  }
+  if (view === "book") {
+    const rows = await VELORA.get("/api/bookings");
+    const drivers = await VELORA.get("/api/drivers");
+    panel.innerHTML = `<h1>Booking management</h1>` + rows.map((b) => `<article class="panel" style="margin:10px 0">
+      <b>${b.id}</b> <span class="status">${b.status}</span> · ${b.email}<br/>${b.pickup.name} → ${b.dest.name}
+      · ${b.quote.symbol}${b.quote.breakdown.total}
+      <select data-as="${b.id}">${drivers.map((d) => `<option value="${d.id}">${d.first}</option>`).join("")}</select>
+      <button class="btn btn-p" data-assign="${b.id}">Assign</button>
+      <button class="btn btn-g" data-can="${b.id}">Cancel</button>
+    </article>`).join("") || "<p>No bookings.</p>";
+    panel.querySelectorAll("[data-assign]").forEach((btn) => btn.onclick = async () => {
+      const sel = panel.querySelector(`[data-as="${btn.dataset.assign}"]`);
+      await VELORA.post("/api/bookings/" + btn.dataset.assign + "/assign", { driver_id: sel.value });
+      paint();
+    });
+    panel.querySelectorAll("[data-can]").forEach((btn) => btn.onclick = async () => {
+      await VELORA.post("/api/bookings/" + btn.dataset.can + "/cancel", {});
+      paint();
+    });
+  }
+  if (view === "manual") {
+    panel.innerHTML = `<h1>Phone / hotel / walk-in</h1>
+      <form class="panel" id="man">
+        <select name="pickup_id">${catalog.locations.map((l)=>`<option value="${l.id}">${l.name}</option>`).join("")}</select>
+        <select name="dest_id">${catalog.locations.map((l)=>`<option value="${l.id}" ${l.id==="taipei-101"?"selected":""}>${l.name}</option>`).join("")}</select>
+        <input name="when" type="datetime-local" required/>
+        <input name="first" value="Hotel Guest" required/>
+        <input name="last" value="Desk"/>
+        <input name="email" value="desk@velora.demo"/>
+        <input name="phone" value="+8862"/>
+        <select name="payment"><option value="invoice">Invoice</option><option value="cash">Cash</option><option value="card">Card</option></select>
+        <button class="btn btn-p">Create booking</button>
+      </form>`;
+    document.getElementById("man").onsubmit = async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      await VELORA.post("/api/bookings", {
+        pickup_id: fd.get("pickup_id"), dest_id: fd.get("dest_id"), when: fd.get("when"),
+        first: fd.get("first"), last: fd.get("last"), email: fd.get("email"), phone: fd.get("phone"),
+        payment: fd.get("payment"), class_id: "standard", pax: 2, bags: 2, terms: true, guest: true,
+      });
+      view = "book"; paint();
+    };
+  }
+  if (view === "fleet") {
+    panel.innerHTML = `<h1>Fleet OS</h1>
+      <p class="sub">Attached live prototype — VELORA does not reimplement this console.</p>
+      <p><a class="btn btn-p" href="${FLEET}" target="_blank" rel="noopener">${FLEET}</a></p>
+      <iframe class="fleet" title="Fleet Dispatch" src="${FLEET}"></iframe>`;
+  }
+  if (view === "drivers") {
+    const ds = await VELORA.get("/api/drivers");
+    panel.innerHTML = `<h1>Drivers & vehicles</h1>` + ds.map((d) => `<div class="panel" style="margin:8px 0"><b>${d.first} ${d.last}</b> · ${d.status} · ★ ${d.rating}
+      <button class="chip" data-t="${d.id}">Toggle</button></div>`).join("");
+    panel.querySelectorAll("[data-t]").forEach((b) => b.onclick = async () => { await VELORA.post("/api/drivers/" + b.dataset.t + "/toggle", {}); paint(); });
+  }
+  if (view === "pricing") {
+    panel.innerHTML = `<h1>Pricing engine</h1>
+      <p>Base NT$420 · per km 28 · per min 6 · airport 80 · night 18% · stop 180 · service 4%.</p>
+      <p>Fixed routes override distance (example TPE → Taipei 101 NT$1,380 before class multiplier).</p>
+      <p>Promos: VELORA10, AIRPORT200, NEWGUEST. Surge architecture ready, disabled.</p>`;
+  }
+}
+
+async function boot() {
+  catalog = await VELORA.get("/api/catalog");
+  document.querySelectorAll(".aside [data-v]").forEach((b) => b.onclick = () => {
+    document.querySelectorAll(".aside [data-v]").forEach((x) => x.classList.remove("on"));
+    b.classList.add("on"); view = b.dataset.v; paint();
+  });
+  paint();
+}
+boot();
