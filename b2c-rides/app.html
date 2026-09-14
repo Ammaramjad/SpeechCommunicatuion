@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>RideLook App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/assets/css/klook.css"/>
+</head>
+<body>
+  <header class="k-top">
+    <a class="logo" href="/"><span class="mark">R</span> RideLook</a>
+    <div class="tools">
+      <a class="pill" href="/web.html">Web</a>
+      <button class="pill" id="langBtn" type="button">繁中 / EN</button>
+    </div>
+  </header>
+  <div class="stage">
+    <div class="phone">
+      <div class="phone-bar">RideLook TW</div>
+      <div class="app-head"><div id="appTitle">RideLook</div><div style="opacity:.85;font-size:12px">NT$ · 台灣</div></div>
+      <div class="app-body" id="appBody"></div>
+      <nav class="app-tab">
+        <button class="on" data-tab="home"></button>
+        <button data-tab="book"></button>
+        <button data-tab="bookings"></button>
+        <button data-tab="account"></button>
+      </nav>
+    </div>
+  </div>
+  <script src="/assets/js/i18n.js"></script>
+  <script src="/assets/js/app.js"></script>
+</body>
+</html>

@@ -1,58 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RideLook B2C — Customer demos</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/shared.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>RideLook Taiwan — B2C + Fleet OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700;800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/assets/css/klook.css"/>
 </head>
-<body class="hub">
-  <header class="topbar">
-    <a class="brand" href="index.html">
-      <span class="brand-mark">R</span> RideLook
-    </a>
-    <div class="top-actions">
-      <span class="meta">B2C demo · taxi & cars only</span>
-      <button class="lang" id="langBtn" type="button">EN / हिं</button>
+<body>
+  <header class="k-top">
+    <a class="logo" href="/"><span class="mark">R</span> RideLook</a>
+    <div class="tools">
+      <span class="sub">TWD · 台灣</span>
+      <button class="pill" id="langBtn" type="button">繁中 / EN</button>
     </div>
   </header>
-  <div class="wrap hub-hero">
-    <p class="kicker">Customer pitch · two looks</p>
-    <h1 id="hubTitle">RideLook B2C — taxi & car booking only</h1>
-    <p class="sub" id="hubSub">Klook-style look, but only the transport category. Two customer demos.</p>
+  <div class="wrap sec">
+    <p class="kicker">Customer demo</p>
+    <h1 id="hubTitle">台灣叫車・接送・租車 B2C</h1>
+    <p class="sub" id="hubSub">客路風格交通平台。官網、App、調度同一後端。</p>
+    <div class="hub-grid">
+      <article class="hub-card">
+        <img src="https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?auto=format&fit=crop&w=1200&q=70" alt=""/>
+        <div class="pad">
+          <p class="kicker" id="webK">官網</p>
+          <h2 id="webT">Guest website</h2>
+          <p class="sub" id="webD">Klook-style 接機／送機／包車／租車／立即叫車</p>
+          <a class="btn btn-k" href="/web.html" id="openWeb">Open</a>
+        </div>
+      </article>
+      <article class="hub-card">
+        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1200&q=70" alt=""/>
+        <div class="pad">
+          <p class="kicker" id="appK">App</p>
+          <h2 id="appT">Guest app</h2>
+          <p class="sub" id="appD">手機訂單會進同一車隊工單</p>
+          <a class="btn btn-k" href="/app.html" id="openApp">Open</a>
+        </div>
+      </article>
+      <article class="hub-card">
+        <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=70" alt=""/>
+        <div class="pad">
+          <p class="kicker" id="flK">Fleet OS</p>
+          <h2 id="flT">Dispatch</h2>
+          <p class="sub" id="flD">即時工單、指派司機、電話建單、GMV（NT$）</p>
+          <a class="btn btn-k" href="/dispatch.html" id="openFleet">Open</a>
+        </div>
+      </article>
+      <article class="hub-card">
+        <img src="https://images.unsplash.com/photo-1485291571150-772bcfc10da5?auto=format&fit=crop&w=1200&q=70" alt=""/>
+        <div class="pad">
+          <p class="kicker" id="drK">Driver</p>
+          <h2 id="drT">司機端</h2>
+          <p class="sub" id="drD">接單、前往、上車驗證碼、完成</p>
+          <a class="btn btn-k" href="/driver.html" id="openDriver">Open</a>
+        </div>
+      </article>
+    </div>
   </div>
-  <div class="wrap demo-grid">
-    <article class="demo-card">
-      <img alt="Airport transfer cars" src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=70" />
-      <div class="pad">
-        <p class="kicker" id="demoA">Demo A · Transfer marketplace</p>
-        <h2>Klook-style catalog</h2>
-        <p class="sub" id="demoABody">Airport pickup, airport drop, hourly private car, intercity. Search → cars → checkout.</p>
-        <a class="btn btn-orange" href="marketplace.html" id="openA">Open marketplace demo</a>
-      </div>
-    </article>
-    <article class="demo-card">
-      <img alt="City taxi" src="https://images.unsplash.com/photo-1485291571150-772bcfc10da5?auto=format&fit=crop&w=1200&q=70" />
-      <div class="pad">
-        <p class="kicker" id="demoB">Demo B · Instant city taxi</p>
-        <h2>Map booking like a taxi app</h2>
-        <p class="sub" id="demoBBody">Book a taxi now on a live map. Choose Mini / Sedan / SUV / Luxury, match a driver, track the ride.</p>
-        <a class="btn btn-orange" href="taxi.html" id="openB">Open taxi demo</a>
-      </div>
-    </article>
-  </div>
-  <footer>
-    <div class="wrap">RideLook is a B2C demo for customer review — not a Klook product. Categories limited to taxi & car booking.</div>
-  </footer>
-  <script src="assets/js/data.js"></script>
+  <footer class="mini"><div class="wrap">RideLook demo · 新台幣 TWD · 繁體中文 / English · not affiliated with Klook</div></footer>
+  <script src="/assets/js/i18n.js"></script>
   <script>
-    document.getElementById("langBtn").onclick = () => RideLook.toggleLang();
-    ["hubTitle","hubSub","demoA","demoB","demoABody","demoBBody","openA","openB"].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = RideLook.t(id);
-    });
+    document.getElementById("langBtn").onclick = () => RL.toggle();
+    hubTitle.textContent = RL.t("hubTitle");
+    hubSub.textContent = RL.t("hubSub");
+    webT.textContent = RL.t("web");
+    appT.textContent = RL.t("app");
+    flT.textContent = RL.t("dispatch");
+    drT.textContent = RL.t("driver");
+    openWeb.textContent = RL.t("openWeb");
+    openApp.textContent = RL.t("openApp");
+    openFleet.textContent = RL.t("openFleet");
+    openDriver.textContent = RL.t("openDriver");
   </script>
 </body>
 </html>

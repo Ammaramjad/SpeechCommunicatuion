@@ -1,0 +1,285 @@
+{
+  "bookings": [
+    {
+      "type": "airport_pickup",
+      "from_id": "tpe",
+      "to_id": "xinyi",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "vehicle_id": "sedan",
+      "hours": 8,
+      "days": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": true,
+      "pet": false,
+      "one_way_rental": false,
+      "insurance": false,
+      "promo": "TPE200",
+      "channel": "app",
+      "name": "林小華",
+      "phone": "0912-000-888",
+      "flight": "BR 071",
+      "notes": "",
+      "id": "RL97823DBD",
+      "otp": "6555",
+      "status": "new",
+      "driver_id": null,
+      "fare": {
+        "base": 1280,
+        "extras": 270,
+        "night": 0,
+        "discount": 200,
+        "total": 1350
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:04:48.406050+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:04:48.406060+00:00",
+          "status": "new",
+          "note": "Created via app"
+        }
+      ]
+    },
+    {
+      "type": "airport_pickup",
+      "from_id": "tpe",
+      "to_id": "taipei-main",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "vehicle_id": "sedan",
+      "hours": 8,
+      "days": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": false,
+      "pet": false,
+      "one_way_rental": false,
+      "insurance": false,
+      "promo": "",
+      "channel": "web",
+      "name": "林小華",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "notes": "",
+      "id": "RL3B54E631",
+      "otp": "8764",
+      "status": "new",
+      "driver_id": null,
+      "fare": {
+        "base": 1280,
+        "extras": 150,
+        "night": 0,
+        "discount": 0,
+        "total": 1430
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:04:46.586559+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:04:46.586569+00:00",
+          "status": "new",
+          "note": "Created via web"
+        }
+      ]
+    },
+    {
+      "type": "instant",
+      "from_id": "xinyi",
+      "to_id": "ximen",
+      "when": "2026-09-15T11:00",
+      "pax": 2,
+      "bags": 2,
+      "vehicle_id": "taxi",
+      "hours": 8,
+      "days": 2,
+      "meet": false,
+      "child_seat": false,
+      "english": false,
+      "pet": false,
+      "one_way_rental": false,
+      "insurance": false,
+      "promo": "",
+      "channel": "app",
+      "name": "林小華",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "notes": "",
+      "id": "RLE0999F08",
+      "otp": "3060",
+      "status": "assigned",
+      "driver_id": "d1",
+      "fare": {
+        "base": 185,
+        "extras": 0,
+        "night": 0,
+        "discount": 0,
+        "total": 185
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:03:10.225747+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:03:10.225753+00:00",
+          "status": "new",
+          "note": "Created via app"
+        },
+        {
+          "at": "2026-09-14T07:03:10.225760+00:00",
+          "status": "assigned",
+          "note": "林志偉"
+        }
+      ]
+    },
+    {
+      "type": "airport_pickup",
+      "from_id": "tpe",
+      "to_id": "xinyi",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "vehicle_id": "sedan",
+      "hours": 8,
+      "days": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": false,
+      "pet": false,
+      "one_way_rental": false,
+      "insurance": false,
+      "promo": "",
+      "channel": "web",
+      "name": "林小華",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "notes": "",
+      "id": "RL1A64FCE3",
+      "otp": "3413",
+      "status": "new",
+      "driver_id": null,
+      "fare": {
+        "base": 1280,
+        "extras": 150,
+        "night": 0,
+        "discount": 0,
+        "total": 1430
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:03:10.223058+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:03:10.223066+00:00",
+          "status": "new",
+          "note": "Created via web"
+        }
+      ]
+    }
+  ],
+  "drivers": [
+    {
+      "id": "d1",
+      "name": "林志偉",
+      "name_en": "Chih-Wei Lin",
+      "phone": "0912-111-223",
+      "plate": "TPE-3388",
+      "vehicle": "sedan",
+      "rating": 4.97,
+      "lat": 25.06,
+      "lng": 121.3,
+      "lang": [
+        "zh-TW",
+        "en"
+      ],
+      "status": "busy",
+      "job_id": "RLE0999F08"
+    },
+    {
+      "id": "d2",
+      "name": "陳淑芬",
+      "name_en": "Shu-Fen Chen",
+      "phone": "0933-555-019",
+      "plate": "KHH-2291",
+      "vehicle": "suv",
+      "rating": 4.93,
+      "lat": 25.04,
+      "lng": 121.52,
+      "lang": [
+        "zh-TW"
+      ],
+      "status": "available",
+      "job_id": null
+    },
+    {
+      "id": "d3",
+      "name": "王大明",
+      "name_en": "Ta-Ming Wang",
+      "phone": "0988-200-441",
+      "plate": "TPE-8801",
+      "vehicle": "mpv",
+      "rating": 4.99,
+      "lat": 25.08,
+      "lng": 121.24,
+      "lang": [
+        "zh-TW",
+        "en",
+        "ja"
+      ],
+      "status": "available",
+      "job_id": null
+    },
+    {
+      "id": "d4",
+      "name": "黃建宏",
+      "name_en": "Chien-Hung Huang",
+      "phone": "0921-774-330",
+      "plate": "TXG-1024",
+      "vehicle": "van",
+      "rating": 4.88,
+      "lat": 24.16,
+      "lng": 120.64,
+      "lang": [
+        "zh-TW"
+      ],
+      "status": "available",
+      "job_id": null
+    },
+    {
+      "id": "d5",
+      "name": "高橋蓮",
+      "name_en": "Ren Takahashi",
+      "phone": "0975-018-662",
+      "plate": "TPE-6666",
+      "vehicle": "premium",
+      "rating": 5.0,
+      "lat": 25.03,
+      "lng": 121.56,
+      "lang": [
+        "zh-TW",
+        "en",
+        "ja"
+      ],
+      "status": "available",
+      "job_id": null
+    },
+    {
+      "id": "d6",
+      "name": "吳佩玲",
+      "name_en": "Pei-Ling Wu",
+      "phone": "0918-909-121",
+      "plate": "KHH-4410",
+      "vehicle": "taxi",
+      "rating": 4.91,
+      "lat": 22.63,
+      "lng": 120.3,
+      "lang": [
+        "zh-TW"
+      ],
+      "status": "available",
+      "job_id": null
+    }
+  ],
+  "alerts": []
+}
