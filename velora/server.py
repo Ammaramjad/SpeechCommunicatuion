@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 import random
 import secrets
 import threading
@@ -14,6 +15,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from fastapi import FastAPI, HTTPException, Header
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -55,7 +57,16 @@ STORE.parent.mkdir(exist_ok=True)
 LOCK = threading.Lock()
 
 app = FastAPI(title="VELORA API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.mount("/assets", StaticFiles(directory=ROOT / "assets"), name="assets")
+app.mount("/data", StaticFiles(directory=ROOT / "data"), name="data")
+
+PUBLIC_URL = os.environ.get("VELORA_PUBLIC_URL") or os.environ.get("RENDER_EXTERNAL_URL") or ""
 
 
 def now_iso() -> str:
@@ -425,6 +436,7 @@ class ChannelOrderIn(BaseModel):
 def meta() -> dict[str, Any]:
     return {
         "brand": "VELORA",
+        "public_url": PUBLIC_URL or "https://velora-private-rides.surge.sh/",
         "fleet_os": FLEET_OS_URL,
         "flags": FEATURE_FLAGS,
         "languages": ["en", "zh-TW", "zh-CN", "ja", "ko", "ar"],
@@ -1163,4 +1175,5 @@ def pages(page_name: str) -> FileResponse:
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("server:app", host="0.0.0.0", port=4173, reload=False)
+    port = int(os.environ.get("PORT", "4173"))
+    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)

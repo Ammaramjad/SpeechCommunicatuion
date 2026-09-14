@@ -1,0 +1,954 @@
+{
+  "classes": [
+    {
+      "id": "economy",
+      "name": "Economy Sedan",
+      "example": "Toyota Corolla or similar",
+      "pax": 3,
+      "bags": 2,
+      "doors": 4,
+      "ac": true,
+      "auto": true,
+      "ev": false,
+      "premium": false,
+      "wheelchair": false,
+      "meet": true,
+      "child": true,
+      "mult": 1.0,
+      "img": "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=70"
+    },
+    {
+      "id": "standard",
+      "name": "Standard Sedan",
+      "example": "Toyota Camry or similar",
+      "pax": 3,
+      "bags": 3,
+      "doors": 4,
+      "ac": true,
+      "auto": true,
+      "ev": false,
+      "premium": false,
+      "wheelchair": false,
+      "meet": true,
+      "child": true,
+      "mult": 1.15,
+      "img": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=70"
+    },
+    {
+      "id": "business",
+      "name": "Business Sedan",
+      "example": "Mercedes-Benz E-Class or similar",
+      "pax": 3,
+      "bags": 3,
+      "doors": 4,
+      "ac": true,
+      "auto": true,
+      "ev": false,
+      "premium": true,
+      "wheelchair": false,
+      "meet": true,
+      "child": true,
+      "mult": 1.85,
+      "img": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=70"
+    },
+    {
+      "id": "luxury",
+      "name": "Luxury Sedan",
+      "example": "Mercedes-Benz S-Class or similar",
+      "pax": 3,
+      "bags": 3,
+      "doors": 4,
+      "ac": true,
+      "auto": true,
+      "ev": false,
+      "premium": true,
+      "wheelchair": false,
+      "meet": true,
+      "child": true,
+      "mult": 2.6,
+      "img": "https://images.unsplash.com/photo-1563720360172-67b8f3dce741?auto=format&fit=crop&w=1200&q=70"
+    },
+    {
+      "id": "suv",
+      "name": "SUV",
+      "example": "Toyota RAV4 or similar",
+      "pax": 4,
+      "bags": 4,
+      "doors": 5,
+      "ac": true,
+      "auto": true,
+      "ev": false,
+      "premium": false,
+      "wheelchair": false,
+      "meet": true,
+      "child": true,
+      "mult": 1.4,
+      "img": "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=70"
+    },
+    {
+      "id": "premium_suv",
+      "name": "Premium SUV",
+      "example": "Mercedes-Benz GLS or similar",
+      "pax": 5,
+      "bags": 5,
+      "doors": 5,
+      "ac": true,
+      "auto": true,
+      "ev": false,
+      "premium": true,
+      "wheelchair": false,
+      "meet": true,
+      "child": true,
+      "mult": 2.2,
+      "img": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=70"
+    },
+    {
+      "id": "mpv",
+      "name": "MPV",
+      "example": "Toyota Alphard or similar",
+      "pax": 6,
+      "bags": 6,
+      "doors": 5,
+      "ac": true,
+      "auto": true,
+      "ev": false,
+      "premium": true,
+      "wheelchair": false,
+      "meet": true,
+      "child": true,
+      "mult": 1.95,
+      "img": "https://images.unsplash.com/photo-1544620341-11cb2cd49d66?auto=format&fit=crop&w=1200&q=70"
+    },
+    {
+      "id": "van",
+      "name": "Van",
+      "example": "Volkswagen Multivan or similar",
+      "pax": 7,
+      "bags": 7,
+      "doors": 5,
+      "ac": true,
+      "auto": true,
+      "ev": false,
+      "premium": false,
+      "wheelchair": true,
+      "meet": true,
+      "child": true,
+      "mult": 1.75,
+      "img": "https://images.unsplash.com/photo-1464219789935-c2d9d9aba894?auto=format&fit=crop&w=1200&q=70"
+    },
+    {
+      "id": "minibus",
+      "name": "Minibus",
+      "example": "Toyota Coaster or similar",
+      "pax": 14,
+      "bags": 14,
+      "doors": 3,
+      "ac": true,
+      "auto": true,
+      "ev": false,
+      "premium": false,
+      "wheelchair": true,
+      "meet": true,
+      "child": true,
+      "mult": 2.8,
+      "img": "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=1200&q=70"
+    },
+    {
+      "id": "ev",
+      "name": "Electric Sedan",
+      "example": "Tesla Model 3 or similar",
+      "pax": 3,
+      "bags": 2,
+      "doors": 4,
+      "ac": true,
+      "auto": true,
+      "ev": true,
+      "premium": true,
+      "wheelchair": false,
+      "meet": true,
+      "child": true,
+      "mult": 1.55,
+      "img": "https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=1200&q=70"
+    }
+  ],
+  "operators": [
+    {
+      "id": "op-aurora",
+      "name": "Aurora Chauffeurs",
+      "rating": 4.92,
+      "rides": 18420,
+      "city": "Taipei"
+    },
+    {
+      "id": "op-lumen",
+      "name": "Lumen Transfer Co.",
+      "rating": 4.88,
+      "rides": 12110,
+      "city": "Taipei"
+    },
+    {
+      "id": "op-pacific",
+      "name": "Pacific Black Car",
+      "rating": 4.95,
+      "rides": 8604,
+      "city": "Kaohsiung"
+    },
+    {
+      "id": "op-formosa",
+      "name": "Formosa Fleet",
+      "rating": 4.81,
+      "rides": 9902,
+      "city": "Taichung"
+    },
+    {
+      "id": "op-jade",
+      "name": "Jade Green Mobility",
+      "rating": 4.9,
+      "rides": 5403,
+      "city": "Taipei"
+    }
+  ],
+  "locations": [
+    {
+      "id": "tpe",
+      "name": "Taoyuan International Airport (TPE)",
+      "city": "Taoyuan",
+      "kind": "airport",
+      "lat": 25.0777,
+      "lng": 121.2328,
+      "terminals": [
+        "T1",
+        "T2"
+      ]
+    },
+    {
+      "id": "tsa",
+      "name": "Taipei Songshan Airport (TSA)",
+      "city": "Taipei",
+      "kind": "airport",
+      "lat": 25.0694,
+      "lng": 121.5525,
+      "terminals": [
+        "Main"
+      ]
+    },
+    {
+      "id": "khh",
+      "name": "Kaohsiung International Airport (KHH)",
+      "city": "Kaohsiung",
+      "kind": "airport",
+      "lat": 22.5771,
+      "lng": 120.35,
+      "terminals": [
+        "I",
+        "D"
+      ]
+    },
+    {
+      "id": "rmq",
+      "name": "Taichung International Airport (RMQ)",
+      "city": "Taichung",
+      "kind": "airport",
+      "lat": 24.2647,
+      "lng": 120.6206,
+      "terminals": [
+        "Main"
+      ]
+    },
+    {
+      "id": "nrt",
+      "name": "Narita International Airport (NRT)",
+      "city": "Tokyo",
+      "kind": "airport",
+      "lat": 35.772,
+      "lng": 140.3929,
+      "terminals": [
+        "T1",
+        "T2",
+        "T3"
+      ]
+    },
+    {
+      "id": "taipei-101",
+      "name": "Taipei 101 / Xinyi",
+      "city": "Taipei",
+      "kind": "landmark",
+      "lat": 25.033,
+      "lng": 121.5654
+    },
+    {
+      "id": "taipei-main",
+      "name": "Taipei Main Station",
+      "city": "Taipei",
+      "kind": "landmark",
+      "lat": 25.0478,
+      "lng": 121.517
+    },
+    {
+      "id": "ximen",
+      "name": "Ximending",
+      "city": "Taipei",
+      "kind": "landmark",
+      "lat": 25.042,
+      "lng": 121.508
+    },
+    {
+      "id": "beitou",
+      "name": "Beitou Hot Springs",
+      "city": "Taipei",
+      "kind": "landmark",
+      "lat": 25.1365,
+      "lng": 121.5065
+    },
+    {
+      "id": "jiufen",
+      "name": "Jiufen Old Street",
+      "city": "New Taipei",
+      "kind": "landmark",
+      "lat": 25.1097,
+      "lng": 121.8443
+    },
+    {
+      "id": "hsr-ty",
+      "name": "THSR Taoyuan Station",
+      "city": "Taoyuan",
+      "kind": "landmark",
+      "lat": 25.0132,
+      "lng": 121.2152
+    },
+    {
+      "id": "w-hotel",
+      "name": "W Taipei",
+      "city": "Taipei",
+      "kind": "hotel",
+      "lat": 25.0398,
+      "lng": 121.5665
+    },
+    {
+      "id": "mandarin",
+      "name": "Mandarin Oriental Taipei",
+      "city": "Taipei",
+      "kind": "hotel",
+      "lat": 25.0542,
+      "lng": 121.525
+    },
+    {
+      "id": "grand-hilai",
+      "name": "Grand Hi-Lai Kaohsiung",
+      "city": "Kaohsiung",
+      "kind": "hotel",
+      "lat": 22.6193,
+      "lng": 120.306
+    },
+    {
+      "id": "formosa-blvd",
+      "name": "Formosa Boulevard",
+      "city": "Kaohsiung",
+      "kind": "landmark",
+      "lat": 22.6314,
+      "lng": 120.3019
+    },
+    {
+      "id": "taichung-st",
+      "name": "Taichung Station",
+      "city": "Taichung",
+      "kind": "landmark",
+      "lat": 24.1368,
+      "lng": 120.685
+    },
+    {
+      "id": "kenting",
+      "name": "Kenting Main Street",
+      "city": "Pingtung",
+      "kind": "landmark",
+      "lat": 21.9483,
+      "lng": 120.7794
+    },
+    {
+      "id": "office-nangang",
+      "name": "Nangang Software Park",
+      "city": "Taipei",
+      "kind": "address",
+      "lat": 25.0568,
+      "lng": 121.6127
+    }
+  ],
+  "popular": [
+    {
+      "id": "tpe-101",
+      "from": "tpe",
+      "to": "taipei-101",
+      "mins": 55
+    },
+    {
+      "id": "tpe-main",
+      "from": "tpe",
+      "to": "taipei-main",
+      "mins": 50
+    },
+    {
+      "id": "tpe-ximen",
+      "from": "tpe",
+      "to": "ximen",
+      "mins": 48
+    },
+    {
+      "id": "tpe-jiufen",
+      "from": "tpe",
+      "to": "jiufen",
+      "mins": 70
+    },
+    {
+      "id": "tsa-101",
+      "from": "tsa",
+      "to": "taipei-101",
+      "mins": 20
+    },
+    {
+      "id": "khh-city",
+      "from": "khh",
+      "to": "formosa-blvd",
+      "mins": 25
+    },
+    {
+      "id": "rmq-tc",
+      "from": "rmq",
+      "to": "taichung-st",
+      "mins": 30
+    },
+    {
+      "id": "tpe-hsr",
+      "from": "tpe",
+      "to": "hsr-ty",
+      "mins": 15
+    }
+  ],
+  "extras": [
+    {
+      "id": "child",
+      "name": "Child seat",
+      "price": 200
+    },
+    {
+      "id": "infant",
+      "name": "Infant seat",
+      "price": 220
+    },
+    {
+      "id": "booster",
+      "name": "Booster seat",
+      "price": 150
+    },
+    {
+      "id": "meet",
+      "name": "Meet & greet with name sign",
+      "price": 180
+    },
+    {
+      "id": "wait",
+      "name": "Extra waiting time (30 min)",
+      "price": 250
+    },
+    {
+      "id": "stop",
+      "name": "Additional stop",
+      "price": 180
+    },
+    {
+      "id": "luggage",
+      "name": "Extra luggage handling",
+      "price": 120
+    },
+    {
+      "id": "wheelchair",
+      "name": "Wheelchair assistance",
+      "price": 0
+    },
+    {
+      "id": "guarantee",
+      "name": "Premium vehicle guarantee",
+      "price": 350
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rv1",
+      "name": "Elena M.",
+      "stars": 5,
+      "ride": "TPE → Taipei 101",
+      "text": "Driver waited after a delayed flight. Quiet, spotless Camry.",
+      "date": "2026-08-12",
+      "cats": {
+        "driver": 5,
+        "clean": 5,
+        "punctual": 5,
+        "comfort": 5,
+        "safety": 5,
+        "value": 5
+      }
+    },
+    {
+      "id": "rv2",
+      "name": "Kenji T.",
+      "stars": 5,
+      "ride": "TPE → Jiufen",
+      "text": "Alphard fit family luggage. Clear name sign at arrivals.",
+      "date": "2026-08-28",
+      "cats": {
+        "driver": 5,
+        "clean": 5,
+        "punctual": 5,
+        "comfort": 5,
+        "safety": 5,
+        "value": 4
+      }
+    },
+    {
+      "id": "rv3",
+      "name": "Sara A.",
+      "stars": 4,
+      "ride": "KHH → Formosa Boulevard",
+      "text": "Transparent NT$ total. Night surcharge shown before pay.",
+      "date": "2026-09-02",
+      "cats": {
+        "driver": 4,
+        "clean": 5,
+        "punctual": 5,
+        "comfort": 4,
+        "safety": 5,
+        "value": 5
+      }
+    },
+    {
+      "id": "rv4",
+      "name": "Noah P.",
+      "stars": 5,
+      "ride": "TSA → Xinyi",
+      "text": "Seven minutes from gate to car. Business sedan as booked.",
+      "date": "2026-09-05",
+      "cats": {
+        "driver": 5,
+        "clean": 5,
+        "punctual": 5,
+        "comfort": 5,
+        "safety": 5,
+        "value": 4
+      }
+    }
+  ],
+  "faq": [
+    {
+      "q": "How will I find my driver?",
+      "a": "For meet & greet, your driver waits in arrivals with a name sign. Otherwise they message the pickup pin and plate."
+    },
+    {
+      "q": "What if my flight is delayed?",
+      "a": "Enable flight tracking. We update pickup, notify the driver, and apply the waiting policy automatically."
+    },
+    {
+      "q": "How much luggage can I bring?",
+      "a": "Each vehicle lists suitcase capacity. Add extra luggage handling if you exceed it."
+    },
+    {
+      "q": "Can I book for someone else?",
+      "a": "Yes. Enter booker and passenger details separately at checkout."
+    },
+    {
+      "q": "Can I cancel?",
+      "a": "Eligible rides: free >24h, partial 6–24h, none under 6h. Exact rule is shown before pay."
+    },
+    {
+      "q": "Are tolls included?",
+      "a": "On most Taipei airport routes tolls are estimated in the total. The breakdown says included vs separate."
+    },
+    {
+      "q": "Can I request a child seat?",
+      "a": "Yes — child, infant, or booster as paid extras, subject to stock."
+    },
+    {
+      "q": "How long will the driver wait?",
+      "a": "Airport pickups include 45 minutes after landing when flight tracking is on. Extra waiting can be added."
+    }
+  ],
+  "help": [
+    {
+      "id": "booking",
+      "title": "Booking"
+    },
+    {
+      "id": "payment",
+      "title": "Payment"
+    },
+    {
+      "id": "cancellation",
+      "title": "Cancellation"
+    },
+    {
+      "id": "driver",
+      "title": "Driver"
+    },
+    {
+      "id": "airport",
+      "title": "Airport pickup"
+    },
+    {
+      "id": "lost",
+      "title": "Lost property"
+    },
+    {
+      "id": "refund",
+      "title": "Refund"
+    },
+    {
+      "id": "account",
+      "title": "Account"
+    }
+  ],
+  "promos": [
+    "VELORA10",
+    "AIRPORT200",
+    "NEWGUEST"
+  ],
+  "promo_shelf": [
+    {
+      "code": "VELORA10",
+      "type": "pct",
+      "value": 10,
+      "min": 800,
+      "label": "10% off"
+    },
+    {
+      "code": "AIRPORT200",
+      "type": "flat",
+      "value": 200,
+      "min": 1000,
+      "label": "NT$200 airport"
+    },
+    {
+      "code": "NEWGUEST",
+      "type": "flat",
+      "value": 150,
+      "min": 0,
+      "label": "New guest NT$150"
+    }
+  ],
+  "fleet_os": "https://fleet-dispatch-demo-8c37.surge.sh/",
+  "secondary_nav": [
+    {
+      "label": "Popular regions",
+      "href": "/#regionPills"
+    },
+    {
+      "label": "Popular destinations",
+      "href": "/#destinations"
+    },
+    {
+      "label": "Airport transfers",
+      "href": "/results.html?service=airport"
+    },
+    {
+      "label": "Hourly hire",
+      "href": "/results.html?service=hourly"
+    },
+    {
+      "label": "Corporate",
+      "href": "/help.html#corporate"
+    },
+    {
+      "label": "Gift cards",
+      "href": "/help.html#gift"
+    },
+    {
+      "label": "Partner channels",
+      "href": "/admin.html"
+    }
+  ],
+  "service_tabs": [
+    {
+      "id": "airport",
+      "label": "Airport transfer",
+      "icon": "✈",
+      "desc": "Flight-aware pickup"
+    },
+    {
+      "id": "p2p",
+      "label": "City transfer",
+      "icon": "🏙",
+      "desc": "Point-to-point"
+    },
+    {
+      "id": "hourly",
+      "label": "Hourly hire",
+      "icon": "⏱",
+      "desc": "4–12 hour charter"
+    },
+    {
+      "id": "intercity",
+      "label": "Intercity",
+      "icon": "🛣",
+      "desc": "Taipei · Taichung · Kaohsiung"
+    },
+    {
+      "id": "corporate",
+      "label": "Corporate",
+      "icon": "💼",
+      "desc": "Invoice & SLA"
+    },
+    {
+      "id": "events",
+      "label": "Events",
+      "icon": "🎫",
+      "desc": "Weddings & groups"
+    }
+  ],
+  "regions": [
+    {
+      "id": "tw",
+      "label": "Taiwan",
+      "active": true
+    },
+    {
+      "id": "jp",
+      "label": "Japan"
+    },
+    {
+      "id": "kr",
+      "label": "Korea"
+    },
+    {
+      "id": "sea",
+      "label": "Southeast Asia"
+    }
+  ],
+  "destinations": [
+    {
+      "id": "taipei",
+      "name": "Taipei",
+      "rides": 4820,
+      "img": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=900&q=70",
+      "loc": "taipei-101"
+    },
+    {
+      "id": "taoyuan",
+      "name": "Taoyuan",
+      "rides": 3910,
+      "img": "https://images.unsplash.com/photo-1436491865339-9a61a08fa67a?auto=format&fit=crop&w=900&q=70",
+      "loc": "tpe"
+    },
+    {
+      "id": "kaohsiung",
+      "name": "Kaohsiung",
+      "rides": 2140,
+      "img": "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=900&q=70",
+      "loc": "khh"
+    },
+    {
+      "id": "taichung",
+      "name": "Taichung",
+      "rides": 1680,
+      "img": "https://images.unsplash.com/photo-1528164344705-47542687000d?auto=format&fit=crop&w=900&q=70",
+      "loc": "taichung-st"
+    },
+    {
+      "id": "jiufen",
+      "name": "Jiufen",
+      "rides": 920,
+      "img": "https://images.unsplash.com/photo-1590559899732-a0ffad3972a9?auto=format&fit=crop&w=900&q=70",
+      "loc": "jiufen"
+    },
+    {
+      "id": "kenting",
+      "name": "Kenting",
+      "rides": 640,
+      "img": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=70",
+      "loc": "kenting"
+    }
+  ],
+  "benefits": [
+    {
+      "icon": "🛡",
+      "title": "Licensed chauffeurs",
+      "text": "Vetted operators, insured vehicles, rated drivers."
+    },
+    {
+      "icon": "⚡",
+      "title": "Instant confirmation",
+      "text": "Most classes confirm in seconds with live driver match."
+    },
+    {
+      "icon": "✈",
+      "title": "Flight-aware pickup",
+      "text": "Delayed wheels-down? We hold and notify the driver."
+    },
+    {
+      "icon": "💳",
+      "title": "Pay in your currency",
+      "text": "TWD, USD, EUR, JPY and more — upfront totals."
+    },
+    {
+      "icon": "↩",
+      "title": "Flexible cancellation",
+      "text": "Free >24h on eligible rides; policy shown before pay."
+    }
+  ],
+  "how_to_book": [
+    {
+      "step": 1,
+      "title": "Search route & time",
+      "text": "Airport, city, hourly or intercity — pickup, destination, passengers."
+    },
+    {
+      "step": 2,
+      "title": "Compare classes & extras",
+      "text": "Sedan to minibus, child seats, meet & greet, promo codes."
+    },
+    {
+      "step": 3,
+      "title": "Ride with live tracking",
+      "text": "Voucher, driver card, flight sync, replacement car if needed."
+    }
+  ],
+  "favorites": [
+    {
+      "id": "f1",
+      "title": "TPE Airport → Taipei 101",
+      "cat": "Airport transfer · Taipei",
+      "class_id": "business",
+      "from": "tpe",
+      "to": "taipei-101",
+      "stars": 4.9,
+      "reviews": 22488,
+      "booked": "120K+",
+      "price": 1680,
+      "badge": "Best seller",
+      "instant": true,
+      "cancel": true,
+      "img": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=70"
+    },
+    {
+      "id": "f2",
+      "title": "TPE Airport → Jiufen Old Street",
+      "cat": "Day trip · New Taipei",
+      "class_id": "mpv",
+      "from": "tpe",
+      "to": "jiufen",
+      "stars": 4.8,
+      "reviews": 8421,
+      "booked": "48K+",
+      "price": 2180,
+      "badge": "Family pick",
+      "instant": true,
+      "cancel": true,
+      "img": "https://images.unsplash.com/photo-1544620341-11cb2cd49d66?auto=format&fit=crop&w=800&q=70"
+    },
+    {
+      "id": "f3",
+      "title": "8-hour Taipei city charter",
+      "cat": "Hourly hire · Taipei",
+      "class_id": "standard",
+      "from": "taipei-main",
+      "to": "taipei-101",
+      "service": "hourly",
+      "stars": 4.9,
+      "reviews": 5620,
+      "booked": "32K+",
+      "price": 7040,
+      "badge": "VELORA exclusive",
+      "instant": true,
+      "cancel": true,
+      "img": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=70"
+    },
+    {
+      "id": "f4",
+      "title": "KHH Airport → city center",
+      "cat": "Airport transfer · Kaohsiung",
+      "class_id": "standard",
+      "from": "khh",
+      "to": "formosa-blvd",
+      "stars": 4.8,
+      "reviews": 3912,
+      "booked": "21K+",
+      "price": 890,
+      "badge": "Free cancellation",
+      "instant": true,
+      "cancel": true,
+      "img": "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=800&q=70"
+    }
+  ],
+  "trending": [
+    "TPE → Taipei 101",
+    "TPE → Jiufen",
+    "TSA → Xinyi",
+    "TPE → THSR Taoyuan",
+    "KHH → Formosa Blvd",
+    "RMQ → Taichung Station",
+    "Hourly Taipei 8h",
+    "Corporate airport SLA"
+  ],
+  "channels": [
+    {
+      "id": "velora",
+      "name": "VELORA web & app",
+      "desc": "Direct marketplace bookings"
+    },
+    {
+      "id": "klook",
+      "name": "Klook partner",
+      "desc": "OTA airport & city transfers"
+    },
+    {
+      "id": "phone",
+      "name": "Phone / hotel desk",
+      "desc": "Manual walk-in orders"
+    },
+    {
+      "id": "api",
+      "name": "Partner API",
+      "desc": "External OTAs & corporates"
+    }
+  ],
+  "pricing": {
+    "base": 420,
+    "per_km": 28,
+    "per_min": 6,
+    "min_fare": 520,
+    "airport": 80,
+    "night": 0.18,
+    "weekend": 0.08,
+    "stop": 180,
+    "service_fee": 0.04,
+    "waiting": 8
+  },
+  "fixed_routes": {
+    "tpe|taipei-101": 1380,
+    "tpe|taipei-main": 1280,
+    "tpe|ximen": 1250,
+    "tpe|w-hotel": 1420,
+    "tpe|jiufen": 1680,
+    "tpe|hsr-ty": 420,
+    "tsa|taipei-101": 480,
+    "khh|formosa-blvd": 520,
+    "khh|grand-hilai": 490,
+    "rmq|taichung-st": 650
+  },
+  "fx": {
+    "TWD": 1.0,
+    "USD": 0.031,
+    "EUR": 0.028,
+    "JPY": 4.6,
+    "KRW": 42.0,
+    "GBP": 0.024,
+    "AED": 0.114,
+    "SAR": 0.116
+  },
+  "symbols": {
+    "TWD": "NT$",
+    "USD": "$",
+    "EUR": "€",
+    "JPY": "¥",
+    "KRW": "₩",
+    "GBP": "£",
+    "AED": "AED",
+    "SAR": "SAR"
+  }
+}
