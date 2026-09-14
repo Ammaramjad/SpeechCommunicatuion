@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>VELORA — Private cars with professional drivers</title>
+  <meta name="description" content="Book trusted professional drivers for airport transfers, city rides and hourly hire. Upfront pricing in TWD and major currencies."/>
+  <meta property="og:title" content="VELORA — Your private ride"/>
+  <meta property="og:description" content="Private cars. Professional drivers. Transparent prices."/>
+  <link rel="canonical" href="/"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/assets/css/main.css"/>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TravelAgency","name":"VELORA","description":"Private car marketplace with professional drivers"}</script>
+</head>
+<body>
+  <div id="chrome-header"></div>
+  <main id="main">
+    <section class="hero">
+      <div class="blob" aria-hidden="true"></div>
+      <div class="wrap">
+        <p class="badge">Private cars · professional drivers</p>
+        <h1 id="heroTitle">Your private ride, wherever you go.</h1>
+        <p class="lede" id="heroLede">Book trusted professional drivers for airport transfers, city rides, business travel and private journeys.</p>
+        <form class="search" id="searchForm" aria-label="Ride search">
+          <div class="tabs" role="tablist">
+            <button class="tab" type="button" role="tab" aria-selected="true" data-service="airport">Airport Transfer</button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-service="p2p">Point-to-Point</button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-service="hourly">Hourly Hire</button>
+          </div>
+          <div id="airMode" class="checks">
+            <label><input type="radio" name="mode" value="pickup" checked/> Airport pickup</label>
+            <label><input type="radio" name="mode" value="drop"/> Airport drop-off</label>
+            <label><input type="radio" name="trip" value="one" checked/> One way</label>
+            <label><input type="radio" name="trip" value="round"/> Round trip</label>
+          </div>
+          <div class="grid-s">
+            <div class="field"><label for="pickup">Pickup</label>
+              <input id="pickup" name="pickup" list="locs" autocomplete="off" required placeholder="Airport, hotel, address"/>
+            </div>
+            <div class="field"><label for="dest">Destination</label>
+              <input id="dest" name="dest" list="locs" autocomplete="off" required placeholder="Where to?"/>
+            </div>
+            <button class="swap" type="button" id="swap" aria-label="Swap locations">⇄</button>
+            <div class="field"><label for="when">Date & time</label><input id="when" name="when" type="datetime-local" required/></div>
+            <div class="field"><label for="pax">Passengers</label><input id="pax" name="pax" type="number" min="1" max="14" value="2"/></div>
+            <div class="field"><label for="bags">Luggage</label><input id="bags" name="bags" type="number" min="0" max="14" value="2"/></div>
+            <button class="btn btn-p" type="submit" id="searchBtn">Search</button>
+          </div>
+          <div id="airportExtra" class="checks">
+            <label>Flight <input name="flight" placeholder="CI 011"/></label>
+            <label><input type="checkbox" name="track" checked/> Track my flight automatically</label>
+            <label><input type="checkbox" name="meet" checked/> Meet & greet</label>
+            <label id="hoursWrap" class="hidden">Hours <input type="number" name="hours" min="4" max="12" value="8"/></label>
+            <div id="returnWrap" class="hidden">Return <input type="datetime-local" name="return_when"/></div>
+          </div>
+          <datalist id="locs"></datalist>
+          <p class="sub" id="recent"></p>
+        </form>
+      </div>
+    </section>
+    <section class="sec wrap">
+      <div class="trust">
+        <div>Professional drivers</div><div>Upfront pricing</div><div>24/7 support</div>
+        <div>Free cancellation on eligible rides</div><div>Secure payments · no card stored</div>
+      </div>
+    </section>
+    <section class="sec wrap">
+      <h2>Popular routes</h2>
+      <p class="sub">Live from the VELORA catalog — starting prices in your currency.</p>
+      <div class="cards" id="popular"></div>
+    </section>
+    <section class="sec wrap">
+      <h2>Choose your ride</h2>
+      <div class="cards" id="classes"></div>
+    </section>
+    <section class="sec wrap">
+      <h2>Why VELORA</h2>
+      <div class="how">
+        <article class="card"><div class="pad"><h3>Chauffeurs, not random cabs</h3><p class="sub">Licensed operators, rated drivers, insured vehicles.</p></div></article>
+        <article class="card"><div class="pad"><h3>The price you see is the price you pay</h3><p class="sub">Base, airport, night, extras and discounts before checkout.</p></div></article>
+        <article class="card"><div class="pad"><h3>Flight-aware pickup</h3><p class="sub">Delayed wheels-down? We hold and notify the driver.</p></div></article>
+      </div>
+    </section>
+    <section class="sec wrap">
+      <h2>How it works</h2>
+      <div class="how">
+        <div><div class="num">1</div><h3>Search</h3><p class="sub">Pickup, destination, time.</p></div>
+        <div><div class="num">2</div><h3>Choose</h3><p class="sub">Compare classes, extras, policies.</p></div>
+        <div><div class="num">3</div><h3>Ride</h3><p class="sub">Voucher, driver, live tracking.</p></div>
+      </div>
+    </section>
+    <section class="sec wrap">
+      <h2>Verified reviews</h2>
+      <div class="cards" id="reviews"></div>
+    </section>
+    <section class="sec wrap">
+      <div class="panel" style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center">
+        <div><h2 style="margin:0">Corporate & partners</h2><p class="sub">Monthly invoicing and hotel desks — architecture ready, flag off for v1.</p></div>
+        <a class="btn btn-g" href="/driver.html">Drive with VELORA</a>
+      </div>
+    </section>
+    <section class="sec wrap">
+      <h2>FAQ</h2>
+      <div class="acc" id="faq"></div>
+    </section>
+  </main>
+  <div id="chrome-footer"></div>
+  <script src="/assets/js/core.js"></script>
+  <script src="/assets/js/home.js"></script>
+</body>
+</html>

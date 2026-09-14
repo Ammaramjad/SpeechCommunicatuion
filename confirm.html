@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Confirmed — VELORA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/assets/css/main.css"/>
+</head>
+<body>
+  <div id="chrome-header"></div>
+  <main class="ok" id="box"><div class="skel" style="height:200px"></div></main>
+  <div id="chrome-footer"></div>
+  <script src="/assets/js/core.js"></script>
+  <script>
+    document.getElementById("chrome-header").innerHTML = headerHTML();
+    document.getElementById("chrome-footer").innerHTML = footerHTML();
+    bindChrome();
+    const id = new URLSearchParams(location.search).get("id");
+    VELORA.get("/api/bookings/" + encodeURIComponent(id)).then((b) => {
+      const qr = `<svg viewBox="0 0 80 80" width="88" height="88" aria-label="QR">${[...b.id].map((ch,i)=>`<rect x="${(i%8)*10}" y="${Math.floor(i/8)*10}" width="8" height="8" fill="${(ch.charCodeAt(0)%2)?"#1f4e46":"#c9a27a"}"/>`).join("")}</svg>`;
+      document.getElementById("box").innerHTML = `
+        <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="34" fill="#eef4f2"/><path d="M20 38 l12 12 22-24" fill="none" stroke="#1f4e46" stroke-width="4" stroke-dasharray="80" stroke-dashoffset="80" style="animation:checkdraw .8s forwards ease"/></svg>
+        <h1 class="xl">${VELORA.t("confirmed")}</h1>
+        <p>Booking reference <b>${b.id}</b></p>
+        <div class="voucher" id="voucher">
+          ${qr}
+          <p>${b.pickup.name} → ${b.dest.name}</p>
+          <p>${b.when} · ${b.class.name} · ${b.pax} pax · ${b.bags} bags</p>
+          <p>OTP ${b.otp} · ${b.quote.symbol}${b.quote.breakdown.total.toLocaleString()}</p>
+          <p>Emergency +886-2-555-0100 · Free cancel &gt;24h</p>
+        </div>
+        <p>
+          <a class="btn btn-p" href="/account.html">View booking</a>
+          <button class="btn btn-g" onclick="window.print()">${VELORA.t("voucher")}</button>
+          <a class="btn btn-g" href="/track.html?id=${encodeURIComponent(b.id)}">${VELORA.t("track")}</a>
+          <a class="btn btn-g" href="/help.html">Support</a>
+        </p>
+        <p class="sub">Create an account to manage this booking · confirmation emailed to ${b.email}</p>`;
+    }).catch(() => { document.getElementById("box").textContent = "Booking not found."; });
+  </script>
+</body>
+</html>
