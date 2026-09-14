@@ -1,0 +1,59 @@
+name: Deploy VELORA to GitHub Pages
+
+on:
+  push:
+    branches: [main, "cursor/**"]
+    paths:
+      - "velora/**"
+      - ".github/workflows/deploy-velora-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: velora-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Export catalog for static demo
+        working-directory: velora
+        run: |
+          python3 <<'PY'
+          import json
+          from catalog import *
+          from pathlib import Path
+          cat = {
+              "classes": CLASSES, "operators": OPERATORS, "locations": LOCATIONS,
+              "popular": POPULAR, "extras": EXTRAS, "reviews": REVIEWS, "faq": FAQ,
+              "help": HELP, "promos": list(PROMOS.keys()),
+              "promo_shelf": [{"code": k, **v} for k, v in PROMOS.items()],
+              "fleet_os": FLEET_OS_URL, "secondary_nav": SECONDARY_NAV,
+              "service_tabs": SERVICE_TABS, "regions": REGIONS, "destinations": DESTINATIONS,
+              "benefits": BENEFITS, "how_to_book": HOW_TO_BOOK, "favorites": FAVORITES,
+              "trending": TRENDING, "channels": CHANNELS,
+              "pricing": PRICING,
+              "fixed_routes": {f"{a}|{b}": v for (a, b), v in FIXED_ROUTES.items()},
+              "fx": FX, "symbols": SYMBOL,
+          }
+          Path("data/catalog.json").write_text(json.dumps(cat, ensure_ascii=False, indent=2))
+          PY
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: velora
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

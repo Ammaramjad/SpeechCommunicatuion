@@ -10,7 +10,8 @@ Fleet OS: https://fleet-dispatch-demo-8c37.surge.sh/
 
 | Link | Who can open |
 |------|----------------|
-| **https://velora-private-rides.surge.sh/** | Everyone (demo hosting, Fleet OS style) |
+| **https://ammaramjad.github.io/SpeechCommunicatuion/** | Everyone (auto-deployed demo) |
+| **https://velora-private-rides.surge.sh/** | Optional Surge mirror (run `./deploy-surge.sh` after `npx surge login`) |
 | **Render** (full API + bookings) | Deploy once → get `https://velora-demo.onrender.com` |
 
 ### Quick share from your laptop (temporary link)

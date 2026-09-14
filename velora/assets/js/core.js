@@ -3,10 +3,10 @@ window.VELORA = {
   currency: localStorage.getItem("vl-ccy") || "TWD",
   token: localStorage.getItem("vl-token") || "",
   user: JSON.parse(localStorage.getItem("vl-user") || "none".replace("none", "null")),
-  apiBase: window.VELORA_API_BASE || "",
-  staticMode: /\.surge\.sh$/i.test(location.hostname),
+  apiBase: (window.VELORA_SITE_BASE || "") + (window.VELORA_API_BASE || ""),
+  staticMode: Boolean(window.VELORA_STATIC_HOST) || /\.surge\.sh$/i.test(location.hostname) || /\.github\.io$/i.test(location.hostname),
   fleet: "https://fleet-dispatch-demo-8c37.surge.sh/",
-  publicUrl: "https://velora-private-rides.surge.sh/",
+  publicUrl: "https://ammaramjad.github.io/SpeechCommunicatuion/",
   I18N: {
     en: {
       book: "Book a Ride", airport: "Airport Transfer", hourly: "Hourly Hire", city: "City Transfer",

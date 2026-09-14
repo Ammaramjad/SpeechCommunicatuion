@@ -436,7 +436,7 @@ class ChannelOrderIn(BaseModel):
 def meta() -> dict[str, Any]:
     return {
         "brand": "VELORA",
-        "public_url": PUBLIC_URL or "https://velora-private-rides.surge.sh/",
+        "public_url": PUBLIC_URL or "https://ammaramjad.github.io/SpeechCommunicatuion/",
         "fleet_os": FLEET_OS_URL,
         "flags": FEATURE_FLAGS,
         "languages": ["en", "zh-TW", "zh-CN", "ja", "ko", "ar"],
