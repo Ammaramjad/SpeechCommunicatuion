@@ -30,4 +30,17 @@ Demo logins (password `demo`): `emma@velora.demo`, `driver@velora.demo`, `admin@
 
 Promos: `VELORA10`, `AIRPORT200`, `NEWGUEST`
 
+## Channel → Fleet OS sync
+
+All bookings — VELORA web/app, Klook partner, phone desk, and external API — auto-sync into the Fleet OS dispatch queue (`fleet_jobs`).
+
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /api/channels/klook/orders` | Ingest Klook OTA orders (header `X-Partner-Key`) |
+| `POST /api/channels/partner/orders` | Ingest any external OTA / corporate channel |
+| `GET /api/fleet/jobs` | Fleet OS dispatch feed |
+| `GET /api/admin/channels` | Channel metrics + recent sync queue |
+
+Demo partner key: `velora-demo-partner-key`
+
 Speech-research code in this repository is unchanged. Older RideLook demos remain under `b2c-rides/`.

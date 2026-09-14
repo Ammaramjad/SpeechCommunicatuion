@@ -19,23 +19,33 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from catalog import (
+    BENEFITS,
+    CHANNELS,
     CLASSES,
+    DESTINATIONS,
     DRIVER_REVIEWS,
     DRIVERS,
     EXTRAS,
     FAQ,
+    FAVORITES,
     FEATURE_FLAGS,
     FIXED_ROUTES,
     FLEET_OS_URL,
     FX,
     HELP,
+    HOW_TO_BOOK,
     LOCATIONS,
     OPERATORS,
+    PARTNER_WEBHOOK_KEY,
     POPULAR,
     PRICING,
     PROMOS,
+    REGIONS,
     REVIEWS,
+    SECONDARY_NAV,
+    SERVICE_TABS,
     SYMBOL,
+    TRENDING,
     VEHICLES,
 )
 
@@ -91,6 +101,62 @@ def ref() -> str:
     return "VR-" + "".join(random.choice(alphabet) for _ in range(6))
 
 
+def fleet_ref() -> str:
+    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    return "FO-" + "".join(random.choice(alphabet) for _ in range(6))
+
+
+def loc_id_from_name(name: str) -> str:
+    if not name:
+        return "tpe"
+    low = name.lower().strip()
+    for x in LOCATIONS:
+        if x["id"] == low or x["name"].lower() == low:
+            return x["id"]
+    for x in LOCATIONS:
+        if low in x["name"].lower() or low in x["city"].lower():
+            return x["id"]
+    return "tpe"
+
+
+def to_fleet_job(booking: dict[str, Any]) -> dict[str, Any]:
+    pickup = loc(booking["pickup_id"])
+    dest = loc(booking["dest_id"])
+    cl = klass(booking.get("class_id") or "standard")
+    return {
+        "id": fleet_ref(),
+        "booking_id": booking["id"],
+        "external_id": booking.get("external_id"),
+        "channel": booking.get("channel") or "velora",
+        "status": "queued",
+        "created_at": now_iso(),
+        "synced_at": now_iso(),
+        "fleet_os": FLEET_OS_URL,
+        "pickup": {"id": pickup["id"], "name": pickup["name"], "lat": pickup["lat"], "lng": pickup["lng"]},
+        "dest": {"id": dest["id"], "name": dest["name"], "lat": dest["lat"], "lng": dest["lng"]},
+        "when": booking.get("when"),
+        "class": cl["name"],
+        "pax": booking.get("pax", 2),
+        "bags": booking.get("bags", 2),
+        "passenger": f"{booking.get('first', '')} {booking.get('last', '')}".strip(),
+        "phone": booking.get("phone", ""),
+        "email": booking.get("email", ""),
+        "flight": booking.get("flight", ""),
+        "total_twd": booking.get("quote", {}).get("twd_total", 0),
+        "driver_id": booking.get("driver_id"),
+        "booking_status": booking.get("status"),
+    }
+
+
+def sync_to_fleet(data: dict[str, Any], booking: dict[str, Any]) -> dict[str, Any]:
+    job = to_fleet_job(booking)
+    data.setdefault("fleet_jobs", []).insert(0, job)
+    booking["fleet_job_id"] = job["id"]
+    booking["fleet_sync_status"] = "synced"
+    booking["fleet_synced_at"] = job["synced_at"]
+    return job
+
+
 def empty_store() -> dict[str, Any]:
     users = [
         {"id": "u-emma", "email": "emma@velora.demo", "name": "Emma Chen", "role": "customer", "password": hash_pw("demo"), "phone": "+886910000111"},
@@ -112,6 +178,7 @@ def empty_store() -> dict[str, Any]:
         "vehicles": [dict(v) for v in VEHICLES],
         "reviews": [dict(r) for r in DRIVER_REVIEWS],
         "messages": [],
+        "fleet_jobs": [],
     }
 
 
@@ -128,6 +195,7 @@ def load() -> dict[str, Any]:
         data = json.loads(STORE.read_text())
         data.setdefault("reviews", [dict(r) for r in DRIVER_REVIEWS])
         data.setdefault("messages", [])
+        data.setdefault("fleet_jobs", [])
         return data
 
 
@@ -330,6 +398,29 @@ class PromoIn(BaseModel):
     currency: str = "TWD"
 
 
+class ChannelOrderIn(BaseModel):
+    external_id: str
+    pickup_id: str = ""
+    dest_id: str = ""
+    pickup_name: str = ""
+    dest_name: str = ""
+    when: str
+    first: str
+    last: str = ""
+    email: str
+    phone: str
+    class_id: str = "standard"
+    pax: int = 2
+    bags: int = 2
+    flight: str = ""
+    service: str = "airport"
+    currency: str = "TWD"
+    amount: float = 0
+    track_flight: bool = False
+    meet: bool = False
+    notes: str = ""
+
+
 @app.get("/api/meta")
 def meta() -> dict[str, Any]:
     return {
@@ -355,6 +446,9 @@ def locations(q: str = "") -> list[dict[str, Any]]:
 
 @app.get("/api/catalog")
 def catalog() -> dict[str, Any]:
+    promo_shelf = []
+    for code, p in PROMOS.items():
+        promo_shelf.append({"code": code, "label": p["label"], "min": p["min"], "type": p["type"], "value": p["value"]})
     return {
         "classes": CLASSES,
         "operators": OPERATORS,
@@ -365,7 +459,17 @@ def catalog() -> dict[str, Any]:
         "faq": FAQ,
         "help": HELP,
         "promos": list(PROMOS.keys()),
+        "promo_shelf": promo_shelf,
         "fleet_os": FLEET_OS_URL,
+        "secondary_nav": SECONDARY_NAV,
+        "service_tabs": SERVICE_TABS,
+        "regions": REGIONS,
+        "destinations": DESTINATIONS,
+        "benefits": BENEFITS,
+        "how_to_book": HOW_TO_BOOK,
+        "favorites": FAVORITES,
+        "trending": TRENDING,
+        "channels": CHANNELS,
     }
 
 
@@ -493,9 +597,139 @@ def create_booking(body: BookIn, authorization: Optional[str] = Header(None)) ->
         booking["timeline"].append({"at": now_iso(), "status": "driver_assigned", "note": drv["first"]})
         booking["alerts"].append({"type": "driver", "text": f"{drv['first']} is on the way."})
     data["bookings"].insert(0, booking)
-    data["notifications"].append({"at": now_iso(), "event": "booking_created", "booking": bid, "channel": "in_app"})
+    sync_to_fleet(data, booking)
+    data["notifications"].append({"at": now_iso(), "event": "booking_created", "booking": bid, "channel": body.channel or "web"})
+    data["notifications"].append({"at": now_iso(), "event": "fleet_synced", "booking": bid, "fleet_job": booking.get("fleet_job_id")})
     save(data)
     return attach(booking)
+
+
+def ingest_channel_order(body: ChannelOrderIn, channel: str) -> dict[str, Any]:
+    pickup_id = body.pickup_id or loc_id_from_name(body.pickup_name)
+    dest_id = body.dest_id or loc_id_from_name(body.dest_name)
+    book = BookIn(
+        pickup_id=pickup_id,
+        dest_id=dest_id,
+        when=body.when,
+        first=body.first,
+        last=body.last,
+        email=body.email,
+        phone=body.phone,
+        class_id=body.class_id,
+        pax=body.pax,
+        bags=body.bags,
+        flight=body.flight,
+        service=body.service,
+        currency=body.currency,
+        track_flight=body.track_flight,
+        meet=body.meet,
+        notes=body.notes,
+        channel=channel,
+        terms=True,
+        guest=True,
+    )
+    data = load()
+    q = price_quote(book.model_dump())
+    bid = ref()
+    booking = {
+        **book.model_dump(),
+        "id": bid,
+        "public_id": bid,
+        "external_id": body.external_id,
+        "otp": f"{random.randint(1000, 9999)}",
+        "status": "searching_driver",
+        "payment_status": "paid",
+        "driver_id": None,
+        "quote": q,
+        "created_at": now_iso(),
+        "user_id": None,
+        "driver_late_min": 0,
+        "passenger_late_min": 0,
+        "flight_delay_min": 0,
+        "expected_pickup": body.when,
+        "incident": None,
+        "replacement": None,
+        "alerts": [],
+        "timeline": [{"at": now_iso(), "status": "payment_confirmed", "note": f"Ingested from {channel}"}],
+        "audit": [{"at": now_iso(), "who": channel, "change": "channel_ingest", "external_id": body.external_id}],
+    }
+    drv = pick_driver(data, loc(pickup_id), body.class_id)
+    if drv:
+        booking["driver_id"] = drv["id"]
+        booking["status"] = "driver_en_route"
+        drv["status"] = "busy"
+        booking["timeline"].append({"at": now_iso(), "status": "driver_assigned", "note": drv["first"]})
+    data["bookings"].insert(0, booking)
+    job = sync_to_fleet(data, booking)
+    data["notifications"].append({"at": now_iso(), "event": "channel_order", "channel": channel, "booking": bid, "external_id": body.external_id})
+    save(data)
+    return {"booking": attach(booking), "fleet_job": job}
+
+
+@app.post("/api/channels/klook/orders")
+def klook_order(body: ChannelOrderIn, x_partner_key: Optional[str] = Header(None)) -> dict[str, Any]:
+    if x_partner_key != PARTNER_WEBHOOK_KEY:
+        raise HTTPException(401, "Invalid partner key")
+    data = load()
+    if any(b.get("external_id") == body.external_id and b.get("channel") == "klook" for b in data["bookings"]):
+        raise HTTPException(409, "Order already ingested")
+    return ingest_channel_order(body, "klook")
+
+
+@app.post("/api/channels/partner/orders")
+def partner_order(body: ChannelOrderIn, x_partner_key: Optional[str] = Header(None)) -> dict[str, Any]:
+    if x_partner_key != PARTNER_WEBHOOK_KEY:
+        raise HTTPException(401, "Invalid partner key")
+    return ingest_channel_order(body, "api")
+
+
+@app.get("/api/fleet/jobs")
+def fleet_jobs(channel: str = "", status: str = "") -> list[dict[str, Any]]:
+    data = load()
+    rows = data.get("fleet_jobs", [])
+    if channel:
+        rows = [j for j in rows if j.get("channel") == channel]
+    if status:
+        rows = [j for j in rows if j.get("status") == status]
+    return rows[:100]
+
+
+@app.post("/api/fleet/jobs/{jid}/ack")
+def fleet_ack(jid: str) -> dict[str, Any]:
+    data = load()
+    job = next((j for j in data.get("fleet_jobs", []) if j["id"] == jid), None)
+    if not job:
+        raise HTTPException(404, "Not found")
+    job["status"] = "dispatched"
+    job["acked_at"] = now_iso()
+    b = next((x for x in data["bookings"] if x["id"] == job["booking_id"]), None)
+    if b:
+        b["fleet_sync_status"] = "dispatched"
+    save(data)
+    return job
+
+
+@app.get("/api/admin/channels")
+def channel_metrics() -> dict[str, Any]:
+    data = load()
+    bs = data["bookings"]
+    by_channel: dict[str, int] = {}
+    gmv_by_channel: dict[str, int] = {}
+    for b in bs:
+        ch = b.get("channel") or "velora"
+        by_channel[ch] = by_channel.get(ch, 0) + 1
+        gmv_by_channel[ch] = gmv_by_channel.get(ch, 0) + b.get("quote", {}).get("twd_total", 0)
+    jobs = data.get("fleet_jobs", [])
+    return {
+        "channels": CHANNELS,
+        "bookings_by_channel": by_channel,
+        "gmv_by_channel": gmv_by_channel,
+        "fleet_jobs_total": len(jobs),
+        "fleet_jobs_queued": sum(1 for j in jobs if j.get("status") == "queued"),
+        "fleet_jobs_dispatched": sum(1 for j in jobs if j.get("status") == "dispatched"),
+        "fleet_os": FLEET_OS_URL,
+        "recent_jobs": jobs[:12],
+    }
 
 
 def pick_driver(data: dict[str, Any], pickup: dict[str, Any], class_id: str = "", exclude: Optional[set[str]] = None) -> Optional[dict[str, Any]]:
@@ -850,6 +1084,8 @@ def metrics(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
         "customers": sum(1 for u in data["users"] if u["role"] == "customer"),
         "conversion": 42,
         "fleet_os": FLEET_OS_URL,
+        "fleet_jobs": len(data.get("fleet_jobs", [])),
+        "channels": {ch: sum(1 for b in bs if (b.get("channel") or "velora") == ch) for ch in ("velora", "klook", "phone", "api", "app", "web")},
     }
 
 

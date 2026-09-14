@@ -26,11 +26,81 @@ SYMBOL = {
 
 FEATURE_FLAGS = {
     "car_rental": False,
-    "intercity": False,
-    "events": False,
-    "corporate": False,
-    "loyalty": False,
+    "intercity": True,
+    "events": True,
+    "corporate": True,
+    "loyalty": True,
 }
+
+SECONDARY_NAV = [
+    {"label": "Popular regions", "href": "/#regionPills"},
+    {"label": "Popular destinations", "href": "/#destinations"},
+    {"label": "Airport transfers", "href": "/results.html?service=airport"},
+    {"label": "Hourly hire", "href": "/results.html?service=hourly"},
+    {"label": "Corporate", "href": "/help.html#corporate"},
+    {"label": "Gift cards", "href": "/help.html#gift"},
+    {"label": "Partner channels", "href": "/admin.html"},
+]
+
+SERVICE_TABS = [
+    {"id": "airport", "label": "Airport transfer", "icon": "✈", "desc": "Flight-aware pickup"},
+    {"id": "p2p", "label": "City transfer", "icon": "🏙", "desc": "Point-to-point"},
+    {"id": "hourly", "label": "Hourly hire", "icon": "⏱", "desc": "4–12 hour charter"},
+    {"id": "intercity", "label": "Intercity", "icon": "🛣", "desc": "Taipei · Taichung · Kaohsiung"},
+    {"id": "corporate", "label": "Corporate", "icon": "💼", "desc": "Invoice & SLA"},
+    {"id": "events", "label": "Events", "icon": "🎫", "desc": "Weddings & groups"},
+]
+
+REGIONS = [
+    {"id": "tw", "label": "Taiwan", "active": True},
+    {"id": "jp", "label": "Japan"},
+    {"id": "kr", "label": "Korea"},
+    {"id": "sea", "label": "Southeast Asia"},
+]
+
+DESTINATIONS = [
+    {"id": "taipei", "name": "Taipei", "rides": 4820, "img": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=900&q=70", "loc": "taipei-101"},
+    {"id": "taoyuan", "name": "Taoyuan", "rides": 3910, "img": "https://images.unsplash.com/photo-1436491865339-9a61a08fa67a?auto=format&fit=crop&w=900&q=70", "loc": "tpe"},
+    {"id": "kaohsiung", "name": "Kaohsiung", "rides": 2140, "img": "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=900&q=70", "loc": "khh"},
+    {"id": "taichung", "name": "Taichung", "rides": 1680, "img": "https://images.unsplash.com/photo-1528164344705-47542687000d?auto=format&fit=crop&w=900&q=70", "loc": "taichung-st"},
+    {"id": "jiufen", "name": "Jiufen", "rides": 920, "img": "https://images.unsplash.com/photo-1590559899732-a0ffad3972a9?auto=format&fit=crop&w=900&q=70", "loc": "jiufen"},
+    {"id": "kenting", "name": "Kenting", "rides": 640, "img": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=70", "loc": "kenting"},
+]
+
+BENEFITS = [
+    {"icon": "🛡", "title": "Licensed chauffeurs", "text": "Vetted operators, insured vehicles, rated drivers."},
+    {"icon": "⚡", "title": "Instant confirmation", "text": "Most classes confirm in seconds with live driver match."},
+    {"icon": "✈", "title": "Flight-aware pickup", "text": "Delayed wheels-down? We hold and notify the driver."},
+    {"icon": "💳", "title": "Pay in your currency", "text": "TWD, USD, EUR, JPY and more — upfront totals."},
+    {"icon": "↩", "title": "Flexible cancellation", "text": "Free >24h on eligible rides; policy shown before pay."},
+]
+
+HOW_TO_BOOK = [
+    {"step": 1, "title": "Search route & time", "text": "Airport, city, hourly or intercity — pickup, destination, passengers."},
+    {"step": 2, "title": "Compare classes & extras", "text": "Sedan to minibus, child seats, meet & greet, promo codes."},
+    {"step": 3, "title": "Ride with live tracking", "text": "Voucher, driver card, flight sync, replacement car if needed."},
+]
+
+FAVORITES = [
+    {"id": "f1", "title": "TPE Airport → Taipei 101", "cat": "Airport transfer · Taipei", "class_id": "business", "from": "tpe", "to": "taipei-101", "stars": 4.9, "reviews": 22488, "booked": "120K+", "price": 1680, "badge": "Best seller", "instant": True, "cancel": True, "img": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=70"},
+    {"id": "f2", "title": "TPE Airport → Jiufen Old Street", "cat": "Day trip · New Taipei", "class_id": "mpv", "from": "tpe", "to": "jiufen", "stars": 4.8, "reviews": 8421, "booked": "48K+", "price": 2180, "badge": "Family pick", "instant": True, "cancel": True, "img": "https://images.unsplash.com/photo-1544620341-11cb2cd49d66?auto=format&fit=crop&w=800&q=70"},
+    {"id": "f3", "title": "8-hour Taipei city charter", "cat": "Hourly hire · Taipei", "class_id": "standard", "from": "taipei-main", "to": "taipei-101", "service": "hourly", "stars": 4.9, "reviews": 5620, "booked": "32K+", "price": 7040, "badge": "VELORA exclusive", "instant": True, "cancel": True, "img": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=70"},
+    {"id": "f4", "title": "KHH Airport → city center", "cat": "Airport transfer · Kaohsiung", "class_id": "standard", "from": "khh", "to": "formosa-blvd", "stars": 4.8, "reviews": 3912, "booked": "21K+", "price": 890, "badge": "Free cancellation", "instant": True, "cancel": True, "img": "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=800&q=70"},
+]
+
+TRENDING = [
+    "TPE → Taipei 101", "TPE → Jiufen", "TSA → Xinyi", "TPE → THSR Taoyuan",
+    "KHH → Formosa Blvd", "RMQ → Taichung Station", "Hourly Taipei 8h", "Corporate airport SLA",
+]
+
+CHANNELS = [
+    {"id": "velora", "name": "VELORA web & app", "desc": "Direct marketplace bookings"},
+    {"id": "klook", "name": "Klook partner", "desc": "OTA airport & city transfers"},
+    {"id": "phone", "name": "Phone / hotel desk", "desc": "Manual walk-in orders"},
+    {"id": "api", "name": "Partner API", "desc": "External OTAs & corporates"},
+]
+
+PARTNER_WEBHOOK_KEY = "velora-demo-partner-key"
 
 OPERATORS = [
     {"id": "op-aurora", "name": "Aurora Chauffeurs", "rating": 4.92, "rides": 18420, "city": "Taipei"},

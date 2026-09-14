@@ -102,6 +102,29 @@ async function paint() {
       view = "book"; paint();
     };
   }
+  if (view === "channels") {
+    const ch = await VELORA.get("/api/admin/channels");
+    const jobs = await VELORA.get("/api/fleet/jobs");
+    panel.innerHTML = `<h1>Channels → Fleet OS</h1>
+      <p class="sub">Every VELORA, Klook and partner order syncs into the Fleet OS dispatch queue automatically.</p>
+      <div class="kpis">
+        ${ch.channels.map((c) => `<div class="kpi">${c.name}<b>${ch.bookings_by_channel[c.id] || 0}</b><span class="sub">${c.desc}</span></div>`).join("")}
+        <div class="kpi">Fleet jobs queued<b>${ch.fleet_jobs_queued}</b></div>
+        <div class="kpi">Fleet jobs dispatched<b>${ch.fleet_jobs_dispatched}</b></div>
+      </div>
+      <p><a class="btn btn-p" href="${FLEET}" target="_blank" rel="noopener">Open Fleet OS dispatch</a></p>
+      <h2>Recent sync queue</h2>` +
+      (jobs.slice(0, 10).map((j) => `<article class="panel" style="margin:8px 0">
+        <b>${j.id}</b> · <span class="status">${j.status}</span> · channel <b>${j.channel}</b>
+        ${j.external_id ? `· ext ${j.external_id}` : ""}<br/>
+        ${j.booking_id} · ${j.pickup.name} → ${j.dest.name} · NT$${j.total_twd.toLocaleString()}
+        ${j.status === "queued" ? `<button class="btn btn-g" data-ack="${j.id}" style="margin-top:8px">Mark dispatched</button>` : ""}
+      </article>`).join("") || "<p>No fleet jobs yet.</p>");
+    panel.querySelectorAll("[data-ack]").forEach((b) => b.onclick = async () => {
+      await VELORA.post("/api/fleet/jobs/" + b.dataset.ack + "/ack", {});
+      paint();
+    });
+  }
   if (view === "fleet") {
     panel.innerHTML = `<h1>Fleet OS</h1>
       <p class="sub">Attached live prototype — VELORA does not reimplement this console.</p>
