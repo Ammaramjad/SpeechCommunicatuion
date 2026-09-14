@@ -20,7 +20,7 @@ const form = {
   promo: "",
   first: "Emma", last: "Chen", email: "emma@velora.demo", phone: "+886910000111",
   flight: q.flight || "CI 011", track_flight: true, meet: true, notes: "",
-  for_someone: false, passenger_name: "", payment: "card", guest: true, terms: true,
+  for_someone: false, passenger_name: "", payment: "card", guest: true, terms: true, channel: "web",
 };
 
 let catalog, quote;

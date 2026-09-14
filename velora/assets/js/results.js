@@ -20,6 +20,7 @@ const body = {
 };
 
 let rows = [];
+let summaryMeta = "";
 
 async function run() {
   document.getElementById("summary").textContent = `Searching vehicles… ${body.pickup_id} → ${body.dest_id}`;
@@ -27,7 +28,8 @@ async function run() {
     const res = await VELORA.post("/api/search", body);
     VELORA.track("search_completed", { count: res.count });
     rows = res.results;
-    document.getElementById("summary").textContent = `${res.count} vehicles · ${res.pickup.name} → ${res.dest.name} · ${body.pax} pax · ${body.bags} bags`;
+    summaryMeta = `${res.pickup.name} → ${res.dest.name} · ${body.pax} pax · ${body.bags} bags`;
+    document.getElementById("summary").textContent = `${res.count} vehicles · ${summaryMeta}`;
     draw();
   } catch (e) {
     document.getElementById("summary").textContent = "Location not recognized or search failed. Try a listed airport or landmark.";
@@ -55,7 +57,7 @@ function draw() {
     return (b.popular?1:0) - (a.popular?1:0) || a.price.breakdown.total - b.price.breakdown.total;
   });
   document.getElementById("empty").hidden = list.length > 0;
-  document.getElementById("summary").textContent = `${list.length} vehicles · ${document.getElementById("summary").textContent.split(" · ").slice(1).join(" · ") || ""}`;
+  document.getElementById("summary").textContent = `${list.length} vehicles · ${summaryMeta}`;
   document.getElementById("list").innerHTML = list.map((r, i) => `
     <article class="result" style="animation-delay:${i*40}ms">
       <img src="${r.class.img}" alt="${r.class.name}"/>

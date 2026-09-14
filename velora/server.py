@@ -889,6 +889,11 @@ def reset() -> dict[str, str]:
     return {"ok": "reset"}
 
 
+@app.get("/manifest.json")
+def manifest() -> FileResponse:
+    return FileResponse(ROOT / "manifest.json", media_type="application/manifest+json")
+
+
 @app.get("/robots.txt")
 def robots() -> PlainTextResponse:
     return PlainTextResponse("User-agent: *\nAllow: /\nSitemap: /sitemap.xml\n")

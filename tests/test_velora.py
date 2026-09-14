@@ -71,6 +71,19 @@ def test_live_flight_incident_and_review():
     assert "Safe swap" in rv["text"]
 
 
+def test_driver_profile():
+    p = client.get("/api/drivers/d01/profile").json()
+    assert p["first"] == "Wei"
+    assert p["rating"] >= 4.8
+    assert "reviews" in p
+
+
+def test_manifest_served():
+    r = client.get("/manifest.json")
+    assert r.status_code == 200
+    assert "VELORA" in r.text
+
+
 def test_login_and_fleet_os_attached():
     auth = client.post("/api/auth/login", json={"email": "admin@velora.demo", "password": "demo"}).json()
     assert auth["user"]["role"] == "admin"

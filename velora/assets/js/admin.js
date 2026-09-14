@@ -2,6 +2,12 @@ const FLEET = "https://fleet-dispatch-demo-8c37.surge.sh/";
 let view = "dash";
 let catalog;
 
+function alertHtml(b) {
+  const rows = b.alerts || (b.live && b.live.alerts) || [];
+  if (!rows.length) return "";
+  return `<div class="alert-list">${rows.slice(0, 3).map((a) => `<div>${a.text}</div>`).join("")}</div>`;
+}
+
 async function paint() {
   const panel = document.getElementById("panel");
   if (view === "dash") {
@@ -18,21 +24,51 @@ async function paint() {
         <div class="kpi">Conversion <b>${m.conversion}%</b></div>
       </div>
       <p class="sub">Live dispatch runs on the attached Fleet OS — not a rebuilt clone.</p>
-      <a class="btn btn-p" href="${FLEET}" target="_blank" rel="noopener">Open Fleet Dispatch</a>`;
+      <a class="btn btn-p" href="${FLEET}" target="_blank" rel="noopener">Open Fleet Dispatch</a>
+      <a class="btn btn-g" href="/app.html">Customer app</a>`;
   }
   if (view === "book") {
     const rows = await VELORA.get("/api/bookings");
     const drivers = await VELORA.get("/api/drivers");
-    panel.innerHTML = `<h1>Booking management</h1>` + rows.map((b) => `<article class="panel" style="margin:10px 0">
-      <b>${b.id}</b> <span class="status">${b.status}</span> · ${b.email}<br/>${b.pickup.name} → ${b.dest.name}
-      · ${b.quote.symbol}${b.quote.breakdown.total}
-      <select data-as="${b.id}">${drivers.map((d) => `<option value="${d.id}">${d.first}</option>`).join("")}</select>
-      <button class="btn btn-p" data-assign="${b.id}">Assign</button>
-      <button class="btn btn-g" data-can="${b.id}">Cancel</button>
+    panel.innerHTML = `<h1>Booking management</h1>
+      <p class="sub">Assign drivers, sync flights, dispatch replacement cars after incidents.</p>` +
+      rows.map((b) => `<article class="panel" style="margin:10px 0">
+      <b>${b.id}</b> <span class="status">${b.status}</span> · ${b.channel || "web"} · ${b.email}<br/>
+      ${b.pickup.name} → ${b.dest.name} · ${b.quote.symbol}${b.quote.breakdown.total}
+      ${b.driver ? `<br/>Driver <b>${b.driver.first}</b> ★ ${b.driver.rating}` : ""}
+      ${b.live && b.live.flight ? `<br/><span class="pill warn">Flight ${b.live.flight.code} · ${b.live.flight.delay_min || 0} min delay</span>` : ""}
+      ${b.replacement ? `<br/><span class="pill red">Replacement ${b.replacement.first} · ${b.replacement.plate || ""}</span>` : ""}
+      ${alertHtml(b)}
+      <div class="ios-row" style="margin-top:10px">
+        <select data-as="${b.id}">${drivers.map((d) => `<option value="${d.id}" ${d.id===b.driver_id?"selected":""}>${d.first} · ${d.status}</option>`).join("")}</select>
+        <button class="btn btn-p" data-assign="${b.id}">Assign</button>
+        <button class="btn btn-g" data-track="${b.id}">Live</button>
+      </div>
+      <div class="ios-row" style="margin-top:8px">
+        <button class="btn btn-g" data-ops="${b.id}" data-k="flight_sync">Sync flight</button>
+        <button class="btn btn-g" data-ops="${b.id}" data-k="change_driver">Swap driver</button>
+        <button class="btn btn-g" data-ops="${b.id}" data-k="driver_late">Driver late</button>
+        <button class="btn btn-g" data-ops="${b.id}" data-k="passenger_late">Passenger late</button>
+        <button class="btn btn-g" data-ops="${b.id}" data-k="incident">Accident / replace</button>
+        <button class="btn btn-g" data-can="${b.id}">Cancel</button>
+      </div>
     </article>`).join("") || "<p>No bookings.</p>";
     panel.querySelectorAll("[data-assign]").forEach((btn) => btn.onclick = async () => {
       const sel = panel.querySelector(`[data-as="${btn.dataset.assign}"]`);
       await VELORA.post("/api/bookings/" + btn.dataset.assign + "/assign", { driver_id: sel.value });
+      paint();
+    });
+    panel.querySelectorAll("[data-track]").forEach((btn) => btn.onclick = () => {
+      location.href = "/track.html?id=" + encodeURIComponent(btn.dataset.track);
+    });
+    panel.querySelectorAll("[data-ops]").forEach((btn) => btn.onclick = async () => {
+      const body = { kind: btn.dataset.k };
+      if (btn.dataset.k === "change_driver") {
+        const sel = panel.querySelector(`[data-as="${btn.dataset.ops}"]`);
+        body.driver_id = sel.value;
+      }
+      if (btn.dataset.k === "incident") body.note = "Ops: vehicle incident";
+      await VELORA.post("/api/bookings/" + btn.dataset.ops + "/ops", body);
       paint();
     });
     panel.querySelectorAll("[data-can]").forEach((btn) => btn.onclick = async () => {
@@ -50,6 +86,7 @@ async function paint() {
         <input name="last" value="Desk"/>
         <input name="email" value="desk@velora.demo"/>
         <input name="phone" value="+8862"/>
+        <input name="flight" placeholder="CI 011"/>
         <select name="payment"><option value="invoice">Invoice</option><option value="cash">Cash</option><option value="card">Card</option></select>
         <button class="btn btn-p">Create booking</button>
       </form>`;
@@ -59,7 +96,8 @@ async function paint() {
       await VELORA.post("/api/bookings", {
         pickup_id: fd.get("pickup_id"), dest_id: fd.get("dest_id"), when: fd.get("when"),
         first: fd.get("first"), last: fd.get("last"), email: fd.get("email"), phone: fd.get("phone"),
-        payment: fd.get("payment"), class_id: "standard", pax: 2, bags: 2, terms: true, guest: true,
+        flight: fd.get("flight") || "", track_flight: Boolean(fd.get("flight")),
+        payment: fd.get("payment"), class_id: "standard", pax: 2, bags: 2, terms: true, guest: true, channel: "phone",
       });
       view = "book"; paint();
     };
@@ -72,7 +110,10 @@ async function paint() {
   }
   if (view === "drivers") {
     const ds = await VELORA.get("/api/drivers");
-    panel.innerHTML = `<h1>Drivers & vehicles</h1>` + ds.map((d) => `<div class="panel" style="margin:8px 0"><b>${d.first} ${d.last}</b> · ${d.status} · ★ ${d.rating}
+    panel.innerHTML = `<h1>Drivers & vehicles</h1>` + ds.map((d) => `<div class="panel" style="margin:8px 0">
+      <img src="${d.photo}" alt="" width="40" height="40" style="border-radius:50%;vertical-align:middle;margin-right:8px"/>
+      <b>${d.first} ${d.last}</b> · ${d.status} · ★ ${d.rating}
+      <a class="chip" href="/api/drivers/${d.id}/profile" target="_blank">Profile</a>
       <button class="chip" data-t="${d.id}">Toggle</button></div>`).join("");
     panel.querySelectorAll("[data-t]").forEach((b) => b.onclick = async () => { await VELORA.post("/api/drivers/" + b.dataset.t + "/toggle", {}); paint(); });
   }
