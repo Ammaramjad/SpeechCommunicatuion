@@ -12,7 +12,8 @@ Fleet OS: https://fleet-dispatch-demo-8c37.surge.sh/
 
 1. https://github.com/Ammaramjad/SpeechCommunicatuion/settings/pages  
 2. Source: **Deploy from a branch** → Branch **`gh-pages`** → **`/ (root)`** → **Save**  
-3. Share: **https://ammaramjad.github.io/SpeechCommunicatuion/**
+3. **Custom domain:** leave empty (do not use `velora-private-rides.surge.sh` — that is Surge only)  
+4. Share: **https://ammaramjad.github.io/SpeechCommunicatuion/**
 
 Guide: [PUBLIC-URL.md](PUBLIC-URL.md)
 

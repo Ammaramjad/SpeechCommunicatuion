@@ -14,11 +14,14 @@ Code already `gh-pages` branch par hai. **Ek baar** ye enable karo:
 1. Open: https://github.com/Ammaramjad/SpeechCommunicatuion/settings/pages  
 2. **Build and deployment → Source:** `Deploy from a branch`  
 3. **Branch:** `gh-pages` → folder `/ (root)` → **Save**  
-4. 1–2 minute wait, phir open:
+4. **Custom domain:** leave **empty** (blank). Do **not** put `velora-private-rides.surge.sh` here — that is a Surge domain, not GitHub.  
+5. 1–2 minute wait, phir open:
 
 ### **https://ammaramjad.github.io/SpeechCommunicatuion/**
 
 Ye link phone, laptop, kisi ke bhi browser me chalega.
+
+> If you already entered `velora-private-rides.surge.sh` under Custom domain, click **Remove** and save. That DNS error is expected — Surge and GitHub Pages are separate hosts.
 
 ---
 
