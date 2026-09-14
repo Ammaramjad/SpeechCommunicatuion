@@ -20,6 +20,7 @@ from pydantic import BaseModel, Field
 
 from catalog import (
     CLASSES,
+    DRIVER_REVIEWS,
     DRIVERS,
     EXTRAS,
     FAQ,
@@ -109,6 +110,8 @@ def empty_store() -> dict[str, Any]:
         "saved": [],
         "drivers": [dict(d) for d in DRIVERS],
         "vehicles": [dict(v) for v in VEHICLES],
+        "reviews": [dict(r) for r in DRIVER_REVIEWS],
+        "messages": [],
     }
 
 
@@ -122,7 +125,10 @@ def load() -> dict[str, Any]:
             data = empty_store()
             STORE.write_text(json.dumps(data, ensure_ascii=False, indent=2))
             return data
-        return json.loads(STORE.read_text())
+        data = json.loads(STORE.read_text())
+        data.setdefault("reviews", [dict(r) for r in DRIVER_REVIEWS])
+        data.setdefault("messages", [])
+        return data
 
 
 def save(data: dict[str, Any]) -> None:
@@ -268,6 +274,7 @@ class BookIn(QuoteIn):
     terms: bool = True
     line_id: str = ""
     whatsapp: str = ""
+    channel: str = "web"
 
 
 class AuthIn(BaseModel):
@@ -283,6 +290,24 @@ class StatusIn(BaseModel):
 
 class AssignIn(BaseModel):
     driver_id: str
+
+
+class OpsIn(BaseModel):
+    kind: str
+    minutes: int = 0
+    note: str = ""
+    driver_id: str = ""
+
+
+class ReviewIn(BaseModel):
+    driver: int = 5
+    cleanliness: int = 5
+    punctuality: int = 5
+    comfort: int = 5
+    safety: int = 5
+    value: int = 5
+    text: str = ""
+    name: str = "Guest"
 
 
 class TicketIn(BaseModel):
@@ -443,19 +468,136 @@ def create_booking(body: BookIn, authorization: Optional[str] = Header(None)) ->
         "id": bid,
         "public_id": bid,
         "otp": otp,
-        "status": "payment_confirmed",
+        "status": "searching_driver",
         "payment_status": "paid",
         "driver_id": None,
         "quote": q,
         "created_at": now_iso(),
         "user_id": user["id"] if user else None,
+        "channel": body.channel or "web",
+        "driver_late_min": 0,
+        "passenger_late_min": 0,
+        "flight_delay_min": 0,
+        "expected_pickup": body.when,
+        "incident": None,
+        "replacement": None,
+        "alerts": [],
         "timeline": [{"at": now_iso(), "status": "payment_confirmed", "note": "Paid via " + body.payment}],
-        "audit": [{"at": now_iso(), "who": user["email"] if user else "guest", "change": "created"}],
+        "audit": [{"at": now_iso(), "who": user["email"] if user else "guest", "change": "created", "channel": body.channel}],
     }
+    drv = pick_driver(data, loc(body.pickup_id), body.class_id)
+    if drv:
+        booking["driver_id"] = drv["id"]
+        booking["status"] = "driver_en_route"
+        drv["status"] = "busy"
+        booking["timeline"].append({"at": now_iso(), "status": "driver_assigned", "note": drv["first"]})
+        booking["alerts"].append({"type": "driver", "text": f"{drv['first']} is on the way."})
     data["bookings"].insert(0, booking)
-    data["notifications"].append({"at": now_iso(), "event": "booking_created", "booking": bid, "channel": "email"})
+    data["notifications"].append({"at": now_iso(), "event": "booking_created", "booking": bid, "channel": "in_app"})
     save(data)
     return attach(booking)
+
+
+def pick_driver(data: dict[str, Any], pickup: dict[str, Any], class_id: str = "", exclude: Optional[set[str]] = None) -> Optional[dict[str, Any]]:
+    exclude = exclude or set()
+    candidates = []
+    for d in data["drivers"]:
+        if d["id"] in exclude or d["status"] not in {"online", "busy"}:
+            continue
+        if d["status"] == "busy" and d["id"] not in exclude:
+            continue
+        veh = next((v for v in data["vehicles"] if v["id"] == d.get("vehicle_id")), None)
+        if class_id and veh and veh.get("class_id") != class_id and veh.get("class_id") not in {class_id, "standard", "business"}:
+            pass
+        dist = hav({"lat": d.get("lat", pickup["lat"]), "lng": d.get("lng", pickup["lng"])}, pickup)
+        candidates.append((dist, d))
+    online = [c for c in candidates if c[1]["status"] == "online"]
+    pool = online or candidates
+    if not pool:
+        return None
+    pool.sort(key=lambda x: (x[0], -x[1].get("rating", 0)))
+    return pool[0][1]
+
+
+def lerp(a: float, b: float, t: float) -> float:
+    t = max(0.0, min(1.0, t))
+    return a + (b - a) * t
+
+
+def live_for(b: dict[str, Any], data: dict[str, Any]) -> dict[str, Any]:
+    pickup, dest = loc(b["pickup_id"]), loc(b["dest_id"])
+    drv = next((d for d in data["drivers"] if d["id"] == b.get("driver_id")), None)
+    created = b.get("created_at") or now_iso()
+    try:
+        t0 = datetime.fromisoformat(created.replace("Z", "+00:00")).timestamp()
+    except Exception:
+        t0 = datetime.now(timezone.utc).timestamp()
+    elapsed = max(0, datetime.now(timezone.utc).timestamp() - t0)
+    phase = (elapsed % 240) / 240
+    status = b.get("status") or "searching_driver"
+    home = {"lat": drv["lat"], "lng": drv["lng"]} if drv else pickup
+    if status in {"searching_driver", "payment_confirmed"}:
+        pos, eta, headline = home, 12, "Matching a chauffeur"
+        t = 0.0
+        route = [home, pickup, dest]
+    elif status in {"driver_assigned", "driver_en_route"}:
+        t = min(0.92, 0.15 + phase * 0.8)
+        pos = {"lat": lerp(home["lat"], pickup["lat"], t), "lng": lerp(home["lng"], pickup["lng"], t)}
+        eta = max(1, int((1 - t) * 14) + int(b.get("driver_late_min") or 0))
+        headline = f"Your driver is {eta} minutes away"
+        route = [home, pickup, dest]
+    elif status == "driver_arrived":
+        pos, eta, headline, t = pickup, 0, "Driver has arrived — show OTP", 1.0
+        route = [pickup, dest]
+    elif status in {"on_board", "trip_started", "passenger_on_board"}:
+        t = min(0.95, phase)
+        pos = {"lat": lerp(pickup["lat"], dest["lat"], t), "lng": lerp(pickup["lng"], dest["lng"], t)}
+        eta = max(1, int((1 - t) * 40))
+        headline = f"On the way · {eta} min to destination"
+        route = [pickup, dest]
+    elif status == "trip_completed":
+        pos, eta, headline, t = dest, 0, "Trip completed", 1.0
+        route = [pickup, dest]
+    elif status == "cancelled":
+        pos, eta, headline, t = home, 0, "Trip cancelled", 0.0
+        route = [pickup, dest]
+    else:
+        t = 0.35
+        pos = {"lat": lerp(home["lat"], pickup["lat"], t), "lng": lerp(home["lng"], pickup["lng"], t)}
+        eta = 8
+        headline = "Live trip"
+        route = [home, pickup, dest]
+    if b.get("replacement"):
+        headline = "Replacement vehicle dispatched · " + headline
+    flight = None
+    if b.get("flight"):
+        delay = int(b.get("flight_delay_min") or 0)
+        flight = {"code": b["flight"], "delay_min": delay, "status": "delayed" if delay else "on_time", "track": bool(b.get("track_flight"))}
+    wait = 45 if (pickup["kind"] == "airport" and b.get("track_flight")) else 15
+    wait += int(b.get("passenger_late_min") or 0)
+    comments = [r for r in data.get("reviews", []) if r.get("driver_id") == b.get("driver_id")]
+    return {
+        "booking_id": b["id"],
+        "status": status,
+        "headline": headline,
+        "eta_min": eta,
+        "progress": round(t, 3),
+        "driver_pos": pos,
+        "pickup": pickup,
+        "dest": dest,
+        "route": route,
+        "km": round(sum(road_km(route[i], route[i + 1]) for i in range(len(route) - 1)), 1),
+        "flight": flight,
+        "wait_min": wait,
+        "driver_late_min": int(b.get("driver_late_min") or 0),
+        "passenger_late_min": int(b.get("passenger_late_min") or 0),
+        "incident": b.get("incident"),
+        "replacement": b.get("replacement"),
+        "alerts": b.get("alerts") or [],
+        "otp": b.get("otp"),
+        "comments": comments[-6:],
+        "expected_pickup": b.get("expected_pickup") or b.get("when"),
+    }
 
 
 def attach(b: dict[str, Any]) -> dict[str, Any]:
@@ -463,16 +605,29 @@ def attach(b: dict[str, Any]) -> dict[str, Any]:
     out["pickup"] = loc(b["pickup_id"])
     out["dest"] = loc(b["dest_id"])
     out["class"] = klass(b.get("class_id") or "standard")
-    drv = None
     data = load()
     if b.get("driver_id"):
         drv = next((d for d in data["drivers"] if d["id"] == b["driver_id"]), None)
         if drv:
-            out["driver"] = {k: drv[k] for k in ("id", "first", "rating", "photo", "lang", "vehicle_id", "status") if k in drv}
+            reviews = [r for r in data.get("reviews", []) if r.get("driver_id") == drv["id"]]
+            out["driver"] = {
+                "id": drv["id"],
+                "first": drv["first"],
+                "rating": drv["rating"],
+                "photo": drv["photo"],
+                "lang": drv.get("lang") or [],
+                "vehicle_id": drv.get("vehicle_id"),
+                "status": drv.get("status"),
+                "trips": len(reviews) + 120,
+                "reviews": reviews[-4:],
+            }
             veh = next((v for v in data["vehicles"] if v["id"] == drv.get("vehicle_id")), None)
             if veh:
                 out["driver"]["plate"] = veh["plate"]
                 out["driver"]["model"] = f"{veh['brand']} {veh['model']}"
+                out["driver"]["color"] = veh.get("color")
+                out["driver"]["year"] = veh.get("year")
+    out["live"] = live_for(b, data)
     return out
 
 
@@ -523,12 +678,148 @@ def assign(bid: str, body: AssignIn, authorization: Optional[str] = Header(None)
     d = next((x for x in data["drivers"] if x["id"] == body.driver_id), None)
     if not b or not d:
         raise HTTPException(404, "Not found")
+    prev = b.get("driver_id")
+    if prev and prev != d["id"]:
+        old = next((x for x in data["drivers"] if x["id"] == prev), None)
+        if old:
+            old["status"] = "online"
+        b.setdefault("alerts", []).append({"type": "swap", "text": f"Driver changed to {d['first']}."})
     b["driver_id"] = d["id"]
-    b["status"] = "driver_assigned"
+    b["status"] = "driver_en_route"
     d["status"] = "busy"
     b["timeline"].append({"at": now_iso(), "status": "driver_assigned", "note": d["first"]})
+    b.setdefault("audit", []).append({"at": now_iso(), "who": "ops", "change": "assign", "new": d["id"]})
     save(data)
     return attach(b)
+
+
+@app.get("/api/bookings/{bid}/live")
+def booking_live(bid: str) -> dict[str, Any]:
+    data = load()
+    b = next((x for x in data["bookings"] if x["id"] == bid), None)
+    if not b:
+        raise HTTPException(404, "Not found")
+    return attach(b)
+
+
+@app.post("/api/bookings/{bid}/ops")
+def booking_ops(bid: str, body: OpsIn) -> dict[str, Any]:
+    data = load()
+    b = next((x for x in data["bookings"] if x["id"] == bid), None)
+    if not b:
+        raise HTTPException(404, "Not found")
+    b.setdefault("alerts", [])
+    b.setdefault("timeline", [])
+    b.setdefault("audit", [])
+    kind = body.kind
+    if kind == "passenger_late":
+        b["passenger_late_min"] = int(b.get("passenger_late_min") or 0) + max(5, body.minutes or 10)
+        b["alerts"].insert(0, {"type": "passenger", "text": f"Passenger running {b['passenger_late_min']} min late. Driver will hold."})
+        b["timeline"].append({"at": now_iso(), "status": b["status"], "note": "passenger_late"})
+    elif kind == "driver_late":
+        b["driver_late_min"] = int(b.get("driver_late_min") or 0) + max(5, body.minutes or 8)
+        b["alerts"].insert(0, {"type": "late", "text": f"Driver delayed {b['driver_late_min']} min. Complimentary wait applied."})
+        b["timeline"].append({"at": now_iso(), "status": b["status"], "note": "driver_late"})
+    elif kind == "flight_sync":
+        code = (body.note or b.get("flight") or "CI011").replace(" ", "")
+        delay = abs(hash(code.upper()) % 40)
+        if delay <= 12:
+            delay = body.minutes or 0
+        b["flight"] = b.get("flight") or code
+        b["flight_delay_min"] = delay
+        b["track_flight"] = True
+        if delay:
+            b["expected_pickup"] = (b.get("when") or "") + f"+{delay}m"
+            b["alerts"].insert(0, {"type": "flight", "text": f"Flight {b['flight']} delayed {delay} min. Pickup auto-adjusted. Driver notified."})
+        else:
+            b["alerts"].insert(0, {"type": "flight", "text": f"Flight {b['flight']} on time. Standard 45-min meet window."})
+        b["timeline"].append({"at": now_iso(), "status": b["status"], "note": f"flight_delay_{delay}"})
+    elif kind == "incident":
+        old_id = b.get("driver_id")
+        b["incident"] = {"at": now_iso(), "note": body.note or "Vehicle incident reported", "previous_driver": old_id}
+        if old_id:
+            old = next((x for x in data["drivers"] if x["id"] == old_id), None)
+            if old:
+                old["status"] = "offline"
+        nxt = pick_driver(data, loc(b["pickup_id"]), b.get("class_id") or "", exclude={old_id} if old_id else set())
+        if not nxt:
+            nxt = next((d for d in data["drivers"] if d["id"] != old_id), None)
+        if nxt:
+            nxt["status"] = "busy"
+            veh = next((v for v in data["vehicles"] if v["id"] == nxt.get("vehicle_id")), None)
+            b["driver_id"] = nxt["id"]
+            b["status"] = "driver_en_route"
+            b["replacement"] = {"driver_id": nxt["id"], "first": nxt["first"], "vehicle": f"{veh['brand']} {veh['model']}" if veh else "", "plate": veh["plate"] if veh else "", "reason": "incident"}
+            b["alerts"].insert(0, {"type": "replace", "text": f"Incident handled. {nxt['first']} is coming in a replacement car ({b['replacement'].get('plate')})."})
+            b["timeline"].append({"at": now_iso(), "status": "driver_en_route", "note": "replacement_dispatched"})
+        else:
+            b["alerts"].insert(0, {"type": "replace", "text": "Incident reported. Dispatch is sourcing a replacement."})
+    elif kind == "change_driver":
+        old_id = b.get("driver_id")
+        nxt = next((d for d in data["drivers"] if d["id"] == body.driver_id), None) if body.driver_id else pick_driver(data, loc(b["pickup_id"]), b.get("class_id") or "", exclude={old_id} if old_id else set())
+        if not nxt:
+            raise HTTPException(400, "No replacement driver")
+        if old_id:
+            old = next((x for x in data["drivers"] if x["id"] == old_id), None)
+            if old:
+                old["status"] = "online"
+        nxt["status"] = "busy"
+        b["driver_id"] = nxt["id"]
+        b["status"] = "driver_en_route"
+        b["alerts"].insert(0, {"type": "swap", "text": f"New chauffeur {nxt['first']} assigned at your request."})
+        b["timeline"].append({"at": now_iso(), "status": "driver_assigned", "note": "customer_or_ops_change"})
+    elif kind == "message":
+        data.setdefault("messages", []).append({"at": now_iso(), "booking": bid, "text": body.note, "from": "customer"})
+        b["alerts"].insert(0, {"type": "msg", "text": "Message sent to driver."})
+    else:
+        raise HTTPException(400, "Unknown ops kind")
+    b["audit"].append({"at": now_iso(), "who": "system", "change": kind, "note": body.note})
+    save(data)
+    return attach(b)
+
+
+@app.post("/api/bookings/{bid}/review")
+def booking_review(bid: str, body: ReviewIn) -> dict[str, Any]:
+    data = load()
+    b = next((x for x in data["bookings"] if x["id"] == bid), None)
+    if not b:
+        raise HTTPException(404, "Not found")
+    row = {
+        "id": "rv-" + uuid.uuid4().hex[:6],
+        "driver_id": b.get("driver_id"),
+        "booking_id": bid,
+        "name": (body.name or "Guest")[0] + ".",
+        "stars": int(body.driver),
+        "text": body.text,
+        "date": now_iso()[:10],
+        "verified": True,
+        "punctuality": body.punctuality,
+        "cleanliness": body.cleanliness,
+        "safety": body.safety,
+        "comfort": body.comfort,
+        "value": body.value,
+    }
+    data.setdefault("reviews", []).insert(0, row)
+    b["review"] = row
+    b["timeline"].append({"at": now_iso(), "status": b["status"], "note": "reviewed"})
+    save(data)
+    return row
+
+
+@app.get("/api/drivers/{did}/profile")
+def driver_profile(did: str) -> dict[str, Any]:
+    data = load()
+    d = next((x for x in data["drivers"] if x["id"] == did), None)
+    if not d:
+        raise HTTPException(404, "Not found")
+    reviews = [r for r in data.get("reviews", []) if r.get("driver_id") == did]
+    veh = next((v for v in data["vehicles"] if v["id"] == d.get("vehicle_id")), None)
+    public = {k: d[k] for k in ("id", "first", "rating", "photo", "lang", "status") if k in d}
+    public["vehicle"] = f"{veh['brand']} {veh['model']}" if veh else ""
+    public["plate"] = veh["plate"] if veh else ""
+    public["reviews"] = reviews
+    public["rides"] = 180 + len(reviews)
+    return public
 
 
 @app.post("/api/bookings/{bid}/rebook")

@@ -19,16 +19,18 @@ async function render() {
       <p>${b.pax} pax · ${b.bags} bags · flight ${b.flight || "—"} · OTP ${b.otp}</p>
       <p>${b.notes || ""}</p>
       ${!b.driver_id ? `<button class="btn btn-p" data-a="${b.id}">Accept</button>` : ""}
-      ${b.driver_id === DID ? `
+        ${b.driver_id === DID ? `
         <button class="btn btn-g" data-s="${b.id}" data-st="driver_en_route">En route</button>
         <button class="btn btn-g" data-s="${b.id}" data-st="driver_arrived">Arrived</button>
         <button class="btn btn-g" data-s="${b.id}" data-st="on_board">On board</button>
         <button class="btn btn-p" data-s="${b.id}" data-st="trip_completed">Complete</button>
-        <button class="btn btn-g" data-s="${b.id}" data-st="cancelled">Report issue</button>` : ""}
+        <button class="btn btn-g" data-ops="${b.id}" data-k="driver_late">I’m delayed</button>
+        <button class="btn btn-g" data-ops="${b.id}" data-k="incident">Accident — send replacement</button>` : ""}
     </article>`).join("") || "<p>No jobs in queue.</p>"}
     <p class="sub">Documents: license / insurance — pending review in admin (demo).</p>`;
   document.getElementById("tog").onclick = async () => { await VELORA.post("/api/drivers/" + DID + "/toggle", {}); render(); };
   document.querySelectorAll("[data-a]").forEach((b) => b.onclick = async () => { await VELORA.post("/api/bookings/" + b.dataset.a + "/assign", { driver_id: DID }); render(); });
   document.querySelectorAll("[data-s]").forEach((b) => b.onclick = async () => { await VELORA.post("/api/bookings/" + b.dataset.s + "/status", { status: b.dataset.st }); render(); });
+  document.querySelectorAll("[data-ops]").forEach((b) => b.onclick = async () => { await VELORA.post("/api/bookings/" + b.dataset.ops + "/ops", { kind: b.dataset.k, note: "driver portal" }); render(); });
 }
 render();

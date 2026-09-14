@@ -47,6 +47,30 @@ def test_stop_increases_price():
     assert stop["breakdown"]["total"] > base["breakdown"]["total"]
 
 
+def test_live_flight_incident_and_review():
+    b = client.post("/api/bookings", json={
+        "pickup_id": "tpe", "dest_id": "taipei-101", "when": "2026-09-16T10:00",
+        "first": "Ada", "last": "Lovelace", "email": "ada@example.com", "phone": "+1",
+        "class_id": "business", "terms": True, "flight": "CI011", "track_flight": True, "channel": "app",
+    }).json()
+    bid = b["id"]
+    assert b["driver"]["first"]
+    live = client.get(f"/api/bookings/{bid}/live").json()
+    assert live["live"]["driver_pos"]["lat"]
+    assert live["live"]["eta_min"] >= 0
+    fl = client.post(f"/api/bookings/{bid}/ops", json={"kind": "flight_sync", "note": "CI011"}).json()
+    assert fl["flight_delay_min"] >= 0
+    assert any(a["type"] == "flight" for a in fl["alerts"])
+    late = client.post(f"/api/bookings/{bid}/ops", json={"kind": "passenger_late", "minutes": 10}).json()
+    assert late["passenger_late_min"] >= 10
+    inc = client.post(f"/api/bookings/{bid}/ops", json={"kind": "incident", "note": "collision"}).json()
+    assert inc["replacement"]["first"]
+    assert inc["driver"]["id"] != b["driver"]["id"]
+    rv = client.post(f"/api/bookings/{bid}/review", json={"driver": 5, "text": "Safe swap", "name": "Ada"}).json()
+    assert rv["verified"] is True
+    assert "Safe swap" in rv["text"]
+
+
 def test_login_and_fleet_os_attached():
     auth = client.post("/api/auth/login", json={"email": "admin@velora.demo", "password": "demo"}).json()
     assert auth["user"]["role"] == "admin"
