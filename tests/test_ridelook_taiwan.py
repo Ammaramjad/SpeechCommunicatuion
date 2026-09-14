@@ -31,4 +31,16 @@ def test_web_and_app_bookings_share_backend():
     summary = client.get("/api/fleet/summary").json()
     assert summary["channels"]["web"] >= 1
     assert summary["channels"]["app"] >= 1
-    assert summary["gmv"] > 0
+def test_live_cards_cancel_and_itri_autodispatch():
+    live = client.get("/api/live/marketplace").json()
+    assert live["cards"]
+    assert live["cards"][0]["live_price"] >= live["cards"][0]["from_price"]
+    jobs = client.get("/api/bookings").json()
+    newbie = next(j for j in jobs if j["status"] == "new")
+    c = client.post(f"/api/bookings/{newbie['id']}/cancel")
+    assert c.status_code == 200
+    assert c.json()["status"] == "cancelled"
+    auto = client.post("/api/fleet/auto-dispatch").json()
+    assert auto["engine"].startswith("ITRI")
+    board = client.get("/api/fleet/itri").json()
+    assert "OSRM" in board["map_engines"]

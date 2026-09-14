@@ -8,15 +8,24 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link rel="stylesheet" href="/assets/css/klook.css"/>
   <style>
-    #fmap { height: 280px; border-radius: 12px; margin: 12px 0; }
+    #fmap { height: 320px; border-radius: 12px; margin: 12px 0; }
     #phoneForm input, #phoneForm select { display: block; width: 100%; margin: 6px 0; padding: 8px; border-radius: 8px; border: 1px solid #2a3a5c; background: #0f1728; color: #fff; }
+    .main { min-height: 100vh; }
   </style>
 </head>
 <body>
   <div class="fleet">
     <aside class="side">
       <a class="logo" href="/" style="margin-bottom:16px"><span class="mark">R</span> Fleet OS</a>
-      <a class="on" href="/dispatch.html">Dashboard</a>
+      <button class="on" data-view="dash" type="button">Dashboard</button>
+      <button data-view="jobs" type="button">訂單佇列</button>
+      <button data-view="map" type="button">即時地圖</button>
+      <button data-view="roster" type="button">車隊名冊</button>
+      <button data-view="schedule" type="button">司機排班</button>
+      <button data-view="itri" type="button">ITRI AI 派車</button>
+      <button data-view="forecast" type="button">產能預測</button>
+      <button data-view="analytics" type="button">數據報表</button>
+      <button data-view="sos" type="button">安全中心</button>
       <a href="/web.html">Website</a>
       <a href="/app.html">Guest app</a>
       <a href="/driver.html">Driver</a>
@@ -24,23 +33,11 @@
       <button id="langBtn" type="button">繁中 / EN</button>
     </aside>
     <main class="main">
-      <h2>RideLook Taiwan dispatch</h2>
-      <p class="sub" style="color:#9aa6bf">Jobs from website + app + phone book-ins · currency TWD</p>
+      <h2>走瘋派車風格 · RideLook 中央調度</h2>
+      <p class="sub" style="color:#9aa6bf">Website + App + phone bookings · TWD · 一鍵 ITRI 自動派車</p>
       <div class="kpis" id="kpis"></div>
-      <div id="fmap"></div>
-      <div style="display:grid;grid-template-columns:1.4fr .8fr;gap:14px">
-        <div>
-          <h3>Jobs</h3>
-          <div id="jobs"></div>
-        </div>
-        <div>
-          <form id="phoneForm"></form>
-          <h3>Drivers</h3>
-          <div id="drivers"></div>
-          <h3>Alerts</h3>
-          <div id="alerts"></div>
-        </div>
-      </div>
+      <div class="fleet-tabs" id="quick"></div>
+      <div id="panel"></div>
     </main>
   </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

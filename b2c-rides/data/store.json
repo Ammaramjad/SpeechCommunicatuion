@@ -3,54 +3,11 @@
     {
       "type": "airport_pickup",
       "from_id": "tpe",
-      "to_id": "xinyi",
-      "when": "2026-09-15T10:00",
-      "pax": 2,
-      "bags": 2,
-      "vehicle_id": "sedan",
-      "hours": 8,
-      "days": 2,
-      "meet": true,
-      "child_seat": false,
-      "english": true,
-      "pet": false,
-      "one_way_rental": false,
-      "insurance": false,
-      "promo": "TPE200",
-      "channel": "app",
-      "name": "林小華",
-      "phone": "0912-000-888",
-      "flight": "BR 071",
-      "notes": "",
-      "id": "RL97823DBD",
-      "otp": "6555",
-      "status": "new",
-      "driver_id": null,
-      "fare": {
-        "base": 1280,
-        "extras": 270,
-        "night": 0,
-        "discount": 200,
-        "total": 1350
-      },
-      "currency": "TWD",
-      "created_at": "2026-09-14T07:04:48.406050+00:00",
-      "timeline": [
-        {
-          "at": "2026-09-14T07:04:48.406060+00:00",
-          "status": "new",
-          "note": "Created via app"
-        }
-      ]
-    },
-    {
-      "type": "airport_pickup",
-      "from_id": "tpe",
       "to_id": "taipei-main",
       "when": "2026-09-15T10:00",
       "pax": 2,
       "bags": 2,
-      "vehicle_id": "sedan",
+      "vehicle_id": "shuttle",
       "hours": 8,
       "days": 2,
       "meet": true,
@@ -65,10 +22,48 @@
       "phone": "0912-000-888",
       "flight": "CI 011",
       "notes": "",
-      "id": "RL3B54E631",
-      "otp": "8764",
+      "id": "RL2BD3D86E",
+      "otp": "7344",
       "status": "new",
       "driver_id": null,
+      "fare": {
+        "base": 380,
+        "extras": 150,
+        "night": 0,
+        "discount": 0,
+        "total": 530
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:19:15.654121+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:19:15.654129+00:00",
+          "status": "new",
+          "note": "Created via web"
+        }
+      ]
+    },
+    {
+      "type": "airport_pickup",
+      "from_id": "tpe",
+      "to_id": "xinyi",
+      "channel": "web",
+      "vehicle_id": "sedan",
+      "status": "onboard",
+      "name": "王小姐",
+      "id": "RLSEED01",
+      "otp": "1000",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": true,
+      "pet": false,
+      "promo": "",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "driver_id": "d1",
       "fare": {
         "base": 1280,
         "extras": 150,
@@ -77,103 +72,127 @@
         "total": 1430
       },
       "currency": "TWD",
-      "created_at": "2026-09-14T07:04:46.586559+00:00",
+      "created_at": "2026-09-14T07:19:03.715219+00:00",
       "timeline": [
         {
-          "at": "2026-09-14T07:04:46.586569+00:00",
+          "at": "2026-09-14T07:19:03.715230+00:00",
+          "status": "onboard",
+          "note": "seed"
+        }
+      ]
+    },
+    {
+      "type": "airport_drop",
+      "from_id": "ximen",
+      "to_id": "tpe",
+      "channel": "app",
+      "vehicle_id": "suv",
+      "status": "assigned",
+      "name": "Sato",
+      "id": "RLSEED02",
+      "otp": "1001",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": true,
+      "pet": false,
+      "promo": "",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "driver_id": "d2",
+      "fare": {
+        "base": 1680,
+        "extras": 150,
+        "night": 0,
+        "discount": 0,
+        "total": 1830
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:19:03.715243+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:19:03.715245+00:00",
+          "status": "assigned",
+          "note": "seed"
+        }
+      ]
+    },
+    {
+      "type": "hourly",
+      "from_id": "xinyi",
+      "to_id": "jiufen",
+      "channel": "web",
+      "vehicle_id": "mpv",
+      "status": "new",
+      "name": "林小華",
+      "hours": 8,
+      "id": "RLSEED03",
+      "otp": "1002",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": true,
+      "pet": false,
+      "promo": "",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "driver_id": null,
+      "fare": {
+        "base": 7040,
+        "extras": 150,
+        "night": 0,
+        "discount": 0,
+        "total": 7190
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:19:03.715255+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:19:03.715257+00:00",
           "status": "new",
-          "note": "Created via web"
+          "note": "seed"
         }
       ]
     },
     {
       "type": "instant",
-      "from_id": "xinyi",
-      "to_id": "ximen",
-      "when": "2026-09-15T11:00",
-      "pax": 2,
-      "bags": 2,
-      "vehicle_id": "taxi",
-      "hours": 8,
-      "days": 2,
-      "meet": false,
-      "child_seat": false,
-      "english": false,
-      "pet": false,
-      "one_way_rental": false,
-      "insurance": false,
-      "promo": "",
+      "from_id": "taipei-main",
+      "to_id": "beitou",
       "channel": "app",
-      "name": "林小華",
-      "phone": "0912-000-888",
-      "flight": "CI 011",
-      "notes": "",
-      "id": "RLE0999F08",
-      "otp": "3060",
-      "status": "assigned",
-      "driver_id": "d1",
-      "fare": {
-        "base": 185,
-        "extras": 0,
-        "night": 0,
-        "discount": 0,
-        "total": 185
-      },
-      "currency": "TWD",
-      "created_at": "2026-09-14T07:03:10.225747+00:00",
-      "timeline": [
-        {
-          "at": "2026-09-14T07:03:10.225753+00:00",
-          "status": "new",
-          "note": "Created via app"
-        },
-        {
-          "at": "2026-09-14T07:03:10.225760+00:00",
-          "status": "assigned",
-          "note": "林志偉"
-        }
-      ]
-    },
-    {
-      "type": "airport_pickup",
-      "from_id": "tpe",
-      "to_id": "xinyi",
+      "vehicle_id": "taxi",
+      "status": "new",
+      "name": "Chen",
+      "id": "RLSEED04",
+      "otp": "1003",
       "when": "2026-09-15T10:00",
       "pax": 2,
       "bags": 2,
-      "vehicle_id": "sedan",
-      "hours": 8,
-      "days": 2,
       "meet": true,
       "child_seat": false,
-      "english": false,
+      "english": true,
       "pet": false,
-      "one_way_rental": false,
-      "insurance": false,
       "promo": "",
-      "channel": "web",
-      "name": "林小華",
       "phone": "0912-000-888",
       "flight": "CI 011",
-      "notes": "",
-      "id": "RL1A64FCE3",
-      "otp": "3413",
-      "status": "new",
       "driver_id": null,
       "fare": {
-        "base": 1280,
+        "base": 185,
         "extras": 150,
         "night": 0,
         "discount": 0,
-        "total": 1430
+        "total": 335
       },
       "currency": "TWD",
-      "created_at": "2026-09-14T07:03:10.223058+00:00",
+      "created_at": "2026-09-14T07:19:03.715264+00:00",
       "timeline": [
         {
-          "at": "2026-09-14T07:03:10.223066+00:00",
+          "at": "2026-09-14T07:19:03.715267+00:00",
           "status": "new",
-          "note": "Created via web"
+          "note": "seed"
         }
       ]
     }
@@ -194,7 +213,8 @@
         "en"
       ],
       "status": "busy",
-      "job_id": "RLE0999F08"
+      "job_id": "RLSEED01",
+      "shift": "day"
     },
     {
       "id": "d2",
@@ -209,8 +229,9 @@
       "lang": [
         "zh-TW"
       ],
-      "status": "available",
-      "job_id": null
+      "status": "busy",
+      "job_id": "RLSEED02",
+      "shift": "day"
     },
     {
       "id": "d3",
@@ -228,7 +249,8 @@
         "ja"
       ],
       "status": "available",
-      "job_id": null
+      "job_id": null,
+      "shift": "day"
     },
     {
       "id": "d4",
@@ -244,7 +266,8 @@
         "zh-TW"
       ],
       "status": "available",
-      "job_id": null
+      "job_id": null,
+      "shift": "night"
     },
     {
       "id": "d5",
@@ -262,7 +285,8 @@
         "ja"
       ],
       "status": "available",
-      "job_id": null
+      "job_id": null,
+      "shift": "day"
     },
     {
       "id": "d6",
@@ -278,8 +302,17 @@
         "zh-TW"
       ],
       "status": "available",
-      "job_id": null
+      "job_id": null,
+      "shift": "night"
     }
   ],
-  "alerts": []
+  "alerts": [
+    {
+      "id": "a1",
+      "at": "2026-09-14T07:19:03.715269+00:00",
+      "level": "info",
+      "message": "ITRI AI 排程引擎已連線 · OSRM"
+    }
+  ],
+  "wishlist": []
 }

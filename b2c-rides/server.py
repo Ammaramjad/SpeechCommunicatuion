@@ -83,6 +83,20 @@ CATALOG = {
         "TPE200": {"type": "flat", "value": 200, "label_zh": "機場接送折 NT$200", "label_en": "NT$200 airport off"},
         "FAMILY": {"type": "pct", "value": 10, "label_zh": "家庭 9 折", "label_en": "10% family off"},
     },
+    "reviews": [
+        {"id": "r1", "name": "Mina Chen", "route": "TPE → 台北101", "stars": 5, "text_zh": "舉牌很清楚，航班延誤也有等。", "text_en": "Clear meet & greet, waited for delay."},
+        {"id": "r2", "name": "Ken Sato", "route": "TPE → 九份", "stars": 5, "text_zh": "Alphard 很寬，行李全放下。", "text_en": "Alphard fit all luggage."},
+        {"id": "r3", "name": "Alicia", "route": "KHH → 美麗島", "stars": 4, "text_zh": "價格透明，新台幣結帳方便。", "text_en": "Transparent NT$ pricing."},
+    ],
+    "zones": [
+        {"id": "north", "name_zh": "北北桃", "name_en": "Taipei–Taoyuan", "load": 78, "empty_km": 12},
+        {"id": "central", "name_zh": "台中彰投", "name_en": "Taichung", "load": 54, "empty_km": 18},
+        {"id": "south", "name_zh": "高雄墾丁", "name_en": "Kaohsiung–Kenting", "load": 61, "empty_km": 22},
+    ],
+    "shifts": [
+        {"id": "day", "name_zh": "白班 06:00–18:00", "name_en": "Day 06:00–18:00", "drivers": ["d1", "d2", "d3", "d5"]},
+        {"id": "night", "name_zh": "夜班 18:00–06:00", "name_en": "Night 18:00–06:00", "drivers": ["d4", "d6"]},
+    ],
 }
 
 DRIVERS_SEED = [
@@ -101,8 +115,46 @@ def empty_store() -> dict[str, Any]:
         row = dict(d)
         row["status"] = "available"
         row["job_id"] = None
+        row["shift"] = "day" if d["id"] not in {"d4", "d6"} else "night"
         drivers.append(row)
-    return {"bookings": [], "drivers": drivers, "alerts": []}
+    data = {"bookings": [], "drivers": drivers, "alerts": [], "wishlist": []}
+    seeds = [
+        {"type": "airport_pickup", "from_id": "tpe", "to_id": "xinyi", "channel": "web", "vehicle_id": "sedan", "status": "onboard", "name": "王小姐"},
+        {"type": "airport_drop", "from_id": "ximen", "to_id": "tpe", "channel": "app", "vehicle_id": "suv", "status": "assigned", "name": "Sato"},
+        {"type": "hourly", "from_id": "xinyi", "to_id": "jiufen", "channel": "web", "vehicle_id": "mpv", "status": "new", "name": "林小華", "hours": 8},
+        {"type": "instant", "from_id": "taipei-main", "to_id": "beitou", "channel": "app", "vehicle_id": "taxi", "status": "new", "name": "Chen"},
+    ]
+    for i, s in enumerate(seeds):
+        fare = quote_amount({**s, "when": "2026-09-15T10:00", "meet": True})
+        bid = f"RLSEED{i+1:02d}"
+        b = {
+            **s,
+            "id": bid,
+            "otp": f"{1000+i}",
+            "when": "2026-09-15T10:00",
+            "pax": 2,
+            "bags": 2,
+            "meet": True,
+            "child_seat": False,
+            "english": True,
+            "pet": False,
+            "promo": "",
+            "phone": "0912-000-888",
+            "flight": "CI 011",
+            "driver_id": None,
+            "fare": fare,
+            "currency": "TWD",
+            "created_at": now_iso(),
+            "timeline": [{"at": now_iso(), "status": s["status"], "note": "seed"}],
+        }
+        if s["status"] in {"assigned", "onboard"}:
+            d = data["drivers"][i]
+            b["driver_id"] = d["id"]
+            d["status"] = "busy"
+            d["job_id"] = bid
+        data["bookings"].append(b)
+    data["alerts"].append({"id": "a1", "at": now_iso(), "level": "info", "message": "ITRI AI 排程引擎已連線 · OSRM"})
+    return data
 
 
 def load() -> dict[str, Any]:
@@ -110,7 +162,12 @@ def load() -> dict[str, Any]:
         data = empty_store()
         save(data)
         return data
-    return json.loads(STORE.read_text())
+    data = json.loads(STORE.read_text())
+    data.setdefault("wishlist", [])
+    data.setdefault("alerts", [])
+    data.setdefault("bookings", [])
+    data.setdefault("drivers", [])
+    return data
 
 
 def save(data: dict[str, Any]) -> None:
@@ -212,9 +269,37 @@ class DispatchBookIn(BookingIn):
     channel: str = "dispatch"
 
 
+class ModifyIn(BaseModel):
+    when: str = ""
+    notes: str = ""
+
+
+class WishIn(BaseModel):
+    route_id: str
+
+
 class AlertIn(BaseModel):
     message: str
     level: str = "info"
+
+
+def haversine(a: dict[str, Any], b: dict[str, Any]) -> float:
+    r = 6371
+    p1, p2 = math.radians(a["lat"]), math.radians(b["lat"])
+    dphi = math.radians(b["lat"] - a["lat"])
+    dl = math.radians(b["lng"] - a["lng"])
+    h = math.sin(dphi / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * r * math.asin(min(1, math.sqrt(h)))
+
+
+def itri_score(driver: dict[str, Any], booking: dict[str, Any]) -> dict[str, Any]:
+    origin = place(booking["from_id"])
+    dist = haversine(driver, origin)
+    veh_match = 1.0 if driver.get("vehicle") in {booking.get("vehicle_id"), "taxi"} else 0.6
+    lang_match = 1.0 if booking.get("english") and "en" in driver.get("lang", []) else 0.8
+    rating = float(driver.get("rating", 4.5)) / 5
+    score = round(100 * (0.45 * max(0, 1 - dist / 40) + 0.25 * veh_match + 0.15 * lang_match + 0.15 * rating))
+    return {"driver_id": driver["id"], "km": round(dist, 1), "score": score, "engine": "ITRI-rank-agg"}
 
 
 def attach_place_names(booking: dict[str, Any]) -> dict[str, Any]:
@@ -389,6 +474,144 @@ def add_alert(body: AlertIn) -> dict[str, Any]:
     return row
 
 
+@app.post("/api/bookings/{bid}/cancel")
+def cancel_booking(bid: str) -> dict[str, Any]:
+    return set_status(bid, StatusIn(status="cancelled", note="guest cancel"))
+
+
+@app.post("/api/bookings/{bid}/modify")
+def modify_booking(bid: str, body: ModifyIn) -> dict[str, Any]:
+    data = load()
+    b = next((x for x in data["bookings"] if x["id"] == bid), None)
+    if not b:
+        raise HTTPException(404, "Booking not found")
+    if b["status"] in {"completed", "cancelled", "onboard"}:
+        raise HTTPException(400, "Cannot modify")
+    if body.when:
+        b["when"] = body.when
+        b["fare"] = quote_amount(b)
+    b["timeline"].append({"at": now_iso(), "status": b["status"], "note": body.notes or "modified"})
+    save(data)
+    return attach_place_names(b)
+
+
+@app.get("/api/live/marketplace")
+def live_marketplace() -> dict[str, Any]:
+    data = load()
+    cards = []
+    for r in CATALOG["routes"]:
+        booked = sum(1 for b in data["bookings"] if b.get("from_id") == r["from"] and b.get("to_id") == r["to"] and b["status"] != "cancelled")
+        avail = max(1, 7 - (booked % 6))
+        surge = 1.15 if booked >= 2 else 1.0
+        cards.append({
+            **r,
+            "from_place": place(r["from"]),
+            "to_place": place(r["to"]),
+            "live_price": int(r["from_price"] * surge),
+            "available": avail,
+            "booked_today": booked,
+            "rating": round(4.6 + (abs(hash(r["id"])) % 35) / 100, 2),
+            "surge": surge > 1,
+            "saved": r["id"] in data.get("wishlist", []),
+        })
+    return {"updated_at": now_iso(), "cards": cards, "reviews": CATALOG["reviews"]}
+
+
+@app.get("/api/wishlist")
+def get_wish() -> dict[str, Any]:
+    data = load()
+    ids = data.get("wishlist", [])
+    cards = [c for c in live_marketplace()["cards"] if c["id"] in ids]
+    return {"ids": ids, "cards": cards}
+
+
+@app.post("/api/wishlist")
+def add_wish(body: WishIn) -> dict[str, Any]:
+    data = load()
+    data.setdefault("wishlist", [])
+    if body.route_id not in data["wishlist"]:
+        data["wishlist"].append(body.route_id)
+    save(data)
+    return get_wish()
+
+
+@app.post("/api/wishlist/remove")
+def remove_wish(body: WishIn) -> dict[str, Any]:
+    data = load()
+    data["wishlist"] = [x for x in data.get("wishlist", []) if x != body.route_id]
+    save(data)
+    return get_wish()
+
+
+@app.post("/api/fleet/auto-dispatch")
+def auto_dispatch() -> dict[str, Any]:
+    data = load()
+    assigned = []
+    for b in data["bookings"]:
+        if b["status"] != "new":
+            continue
+        free = [d for d in data["drivers"] if d["status"] == "available"]
+        if not free:
+            break
+        ranked = sorted((itri_score(d, b) for d in free), key=lambda x: -x["score"])
+        pick = next(d for d in free if d["id"] == ranked[0]["driver_id"])
+        b["driver_id"] = pick["id"]
+        b["status"] = "assigned"
+        b["itri"] = ranked[0]
+        pick["status"] = "busy"
+        pick["job_id"] = b["id"]
+        b["timeline"].append({"at": now_iso(), "status": "assigned", "note": f"ITRI auto {ranked[0]['score']}"})
+        assigned.append({"booking": b["id"], **ranked[0], "driver": pick["name"]})
+    save(data)
+    return {"engine": "ITRI rank-aggregation + OSRM", "assigned": assigned}
+
+
+@app.get("/api/fleet/itri")
+def itri_board() -> dict[str, Any]:
+    data = load()
+    pending = [b for b in data["bookings"] if b["status"] == "new"]
+    rows = []
+    for b in pending:
+        ranked = sorted((itri_score(d, b) for d in data["drivers"] if d["status"] == "available"), key=lambda x: -x["score"])
+        rows.append({"booking": attach_place_names(b), "ranking": ranked[:4]})
+    return {
+        "zones": CATALOG["zones"],
+        "shifts": CATALOG["shifts"],
+        "map_engines": ["OSRM", "HERE", "Google"],
+        "engine": "OSRM",
+        "queue": rows,
+        "on_time": 97.4,
+        "empty_km": 14.2,
+        "schedule_minutes": 6,
+    }
+
+
+@app.get("/api/fleet/analytics")
+def analytics() -> dict[str, Any]:
+    data = load()
+    bs = data["bookings"]
+    def n(st): return sum(1 for b in bs if b["status"] == st)
+    by_type = {}
+    for b in bs:
+        by_type[b.get("type", "?")] = by_type.get(b.get("type", "?"), 0) + 1
+    done = n("completed") + n("onboard")
+    total = max(1, len(bs))
+    return {
+        "total": len(bs),
+        "completed": n("completed"),
+        "cancelled": n("cancelled"),
+        "active": sum(1 for b in bs if b["status"] not in {"completed", "cancelled"}),
+        "completion_rate": round(100 * done / total, 1),
+        "cancel_rate": round(100 * n("cancelled") / total, 1),
+        "by_type": by_type,
+        "gmv": sum(b.get("fare", {}).get("total", 0) for b in bs if b["status"] != "cancelled"),
+        "forecast": [
+            {"hour": "09:00", "demand": 18},
+            {"hour": "12:00", "demand": 22},
+            {"hour": "18:00", "demand": 31},
+            {"hour": "22:00", "demand": 14},
+        ],
+    }
 @app.post("/api/demo/reset")
 def reset() -> dict[str, str]:
     save(empty_store())
