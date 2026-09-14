@@ -8,11 +8,19 @@ Fleet OS: https://fleet-dispatch-demo-8c37.surge.sh/
 
 **Do not share** `http://127.0.0.1:4173` — that only works on your computer.
 
-| Link | Who can open |
-|------|----------------|
-| **https://ammaramjad.github.io/SpeechCommunicatuion/** | Everyone (auto-deployed demo) |
-| **https://velora-private-rides.surge.sh/** | Optional Surge mirror (run `./deploy-surge.sh` after `npx surge login`) |
-| **Render** (full API + bookings) | Deploy once → get `https://velora-demo.onrender.com` |
+### One-time setup (30 seconds) — then share with anyone
+
+1. https://github.com/Ammaramjad/SpeechCommunicatuion/settings/pages  
+2. Source: **Deploy from a branch** → Branch **`gh-pages`** → **`/ (root)`** → **Save**  
+3. Share: **https://ammaramjad.github.io/SpeechCommunicatuion/**
+
+Guide: [PUBLIC-URL.md](PUBLIC-URL.md)
+
+| Link | Notes |
+|------|--------|
+| **https://ammaramjad.github.io/SpeechCommunicatuion/** | Works after Pages enabled (step above) |
+| **https://velora-private-rides.surge.sh/** | Surge login + `./deploy-surge.sh` required (else “project not found”) |
+| **Render** (full API) | [Deploy blueprint](https://render.com/deploy?repo=https://github.com/Ammaramjad/SpeechCommunicatuion) |
 
 ### Quick share from your laptop (temporary link)
 
