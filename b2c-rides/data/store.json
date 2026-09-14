@@ -1,0 +1,318 @@
+{
+  "bookings": [
+    {
+      "type": "airport_pickup",
+      "from_id": "tpe",
+      "to_id": "taipei-main",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "vehicle_id": "shuttle",
+      "hours": 8,
+      "days": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": false,
+      "pet": false,
+      "one_way_rental": false,
+      "insurance": false,
+      "promo": "",
+      "channel": "web",
+      "name": "林小華",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "notes": "",
+      "id": "RL2BD3D86E",
+      "otp": "7344",
+      "status": "new",
+      "driver_id": null,
+      "fare": {
+        "base": 380,
+        "extras": 150,
+        "night": 0,
+        "discount": 0,
+        "total": 530
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:19:15.654121+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:19:15.654129+00:00",
+          "status": "new",
+          "note": "Created via web"
+        }
+      ]
+    },
+    {
+      "type": "airport_pickup",
+      "from_id": "tpe",
+      "to_id": "xinyi",
+      "channel": "web",
+      "vehicle_id": "sedan",
+      "status": "onboard",
+      "name": "王小姐",
+      "id": "RLSEED01",
+      "otp": "1000",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": true,
+      "pet": false,
+      "promo": "",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "driver_id": "d1",
+      "fare": {
+        "base": 1280,
+        "extras": 150,
+        "night": 0,
+        "discount": 0,
+        "total": 1430
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:19:03.715219+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:19:03.715230+00:00",
+          "status": "onboard",
+          "note": "seed"
+        }
+      ]
+    },
+    {
+      "type": "airport_drop",
+      "from_id": "ximen",
+      "to_id": "tpe",
+      "channel": "app",
+      "vehicle_id": "suv",
+      "status": "assigned",
+      "name": "Sato",
+      "id": "RLSEED02",
+      "otp": "1001",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": true,
+      "pet": false,
+      "promo": "",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "driver_id": "d2",
+      "fare": {
+        "base": 1680,
+        "extras": 150,
+        "night": 0,
+        "discount": 0,
+        "total": 1830
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:19:03.715243+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:19:03.715245+00:00",
+          "status": "assigned",
+          "note": "seed"
+        }
+      ]
+    },
+    {
+      "type": "hourly",
+      "from_id": "xinyi",
+      "to_id": "jiufen",
+      "channel": "web",
+      "vehicle_id": "mpv",
+      "status": "new",
+      "name": "林小華",
+      "hours": 8,
+      "id": "RLSEED03",
+      "otp": "1002",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": true,
+      "pet": false,
+      "promo": "",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "driver_id": null,
+      "fare": {
+        "base": 7040,
+        "extras": 150,
+        "night": 0,
+        "discount": 0,
+        "total": 7190
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:19:03.715255+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:19:03.715257+00:00",
+          "status": "new",
+          "note": "seed"
+        }
+      ]
+    },
+    {
+      "type": "instant",
+      "from_id": "taipei-main",
+      "to_id": "beitou",
+      "channel": "app",
+      "vehicle_id": "taxi",
+      "status": "new",
+      "name": "Chen",
+      "id": "RLSEED04",
+      "otp": "1003",
+      "when": "2026-09-15T10:00",
+      "pax": 2,
+      "bags": 2,
+      "meet": true,
+      "child_seat": false,
+      "english": true,
+      "pet": false,
+      "promo": "",
+      "phone": "0912-000-888",
+      "flight": "CI 011",
+      "driver_id": null,
+      "fare": {
+        "base": 185,
+        "extras": 150,
+        "night": 0,
+        "discount": 0,
+        "total": 335
+      },
+      "currency": "TWD",
+      "created_at": "2026-09-14T07:19:03.715264+00:00",
+      "timeline": [
+        {
+          "at": "2026-09-14T07:19:03.715267+00:00",
+          "status": "new",
+          "note": "seed"
+        }
+      ]
+    }
+  ],
+  "drivers": [
+    {
+      "id": "d1",
+      "name": "林志偉",
+      "name_en": "Chih-Wei Lin",
+      "phone": "0912-111-223",
+      "plate": "TPE-3388",
+      "vehicle": "sedan",
+      "rating": 4.97,
+      "lat": 25.06,
+      "lng": 121.3,
+      "lang": [
+        "zh-TW",
+        "en"
+      ],
+      "status": "busy",
+      "job_id": "RLSEED01",
+      "shift": "day"
+    },
+    {
+      "id": "d2",
+      "name": "陳淑芬",
+      "name_en": "Shu-Fen Chen",
+      "phone": "0933-555-019",
+      "plate": "KHH-2291",
+      "vehicle": "suv",
+      "rating": 4.93,
+      "lat": 25.04,
+      "lng": 121.52,
+      "lang": [
+        "zh-TW"
+      ],
+      "status": "busy",
+      "job_id": "RLSEED02",
+      "shift": "day"
+    },
+    {
+      "id": "d3",
+      "name": "王大明",
+      "name_en": "Ta-Ming Wang",
+      "phone": "0988-200-441",
+      "plate": "TPE-8801",
+      "vehicle": "mpv",
+      "rating": 4.99,
+      "lat": 25.08,
+      "lng": 121.24,
+      "lang": [
+        "zh-TW",
+        "en",
+        "ja"
+      ],
+      "status": "available",
+      "job_id": null,
+      "shift": "day"
+    },
+    {
+      "id": "d4",
+      "name": "黃建宏",
+      "name_en": "Chien-Hung Huang",
+      "phone": "0921-774-330",
+      "plate": "TXG-1024",
+      "vehicle": "van",
+      "rating": 4.88,
+      "lat": 24.16,
+      "lng": 120.64,
+      "lang": [
+        "zh-TW"
+      ],
+      "status": "available",
+      "job_id": null,
+      "shift": "night"
+    },
+    {
+      "id": "d5",
+      "name": "高橋蓮",
+      "name_en": "Ren Takahashi",
+      "phone": "0975-018-662",
+      "plate": "TPE-6666",
+      "vehicle": "premium",
+      "rating": 5.0,
+      "lat": 25.03,
+      "lng": 121.56,
+      "lang": [
+        "zh-TW",
+        "en",
+        "ja"
+      ],
+      "status": "available",
+      "job_id": null,
+      "shift": "day"
+    },
+    {
+      "id": "d6",
+      "name": "吳佩玲",
+      "name_en": "Pei-Ling Wu",
+      "phone": "0918-909-121",
+      "plate": "KHH-4410",
+      "vehicle": "taxi",
+      "rating": 4.91,
+      "lat": 22.63,
+      "lng": 120.3,
+      "lang": [
+        "zh-TW"
+      ],
+      "status": "available",
+      "job_id": null,
+      "shift": "night"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "a1",
+      "at": "2026-09-14T07:19:03.715269+00:00",
+      "level": "info",
+      "message": "ITRI AI 排程引擎已連線 · OSRM"
+    }
+  ],
+  "wishlist": []
+}

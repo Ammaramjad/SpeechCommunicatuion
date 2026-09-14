@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Live trip — VELORA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="/assets/css/main.css"/>
+  <link rel="stylesheet" href="/assets/css/apple.css"/>
+</head>
+<body>
+  <div id="chrome-header"></div>
+  <main class="web-live">
+    <div id="map"></div>
+    <aside class="web-sheet" id="sheet"><div class="skel" style="height:180px"></div></aside>
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/assets/js/core.js"></script>
+  <script src="/assets/js/live.js"></script>
+  <script>
+    document.getElementById("chrome-header").innerHTML = headerHTML();
+    bindChrome();
+    const LIV = window.VELORA_LIVE;
+    const id = new URLSearchParams(location.search).get("id");
+    const map = L.map("map").setView([25.04, 121.5], 11);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "© OpenStreetMap" }).addTo(map);
+    async function tick() {
+      const b = await VELORA.get("/api/bookings/" + encodeURIComponent(id) + "/live");
+      LIV.paintMap(map, b);
+      const fl = b.live.flight;
+      document.getElementById("sheet").innerHTML = `
+        <p class="sub">Live · also in the <a href="/app.html?id=${encodeURIComponent(b.id)}">VELORA app</a></p>
+        <p class="pill">${b.live.headline}</p>
+        <div class="eta-num">${b.live.eta_min}<span style="font-size:18px"> min</span></div>
+        <h2>${b.pickup.name} → ${b.dest.name}</h2>
+        ${LIV.driverBlock(b)}
+        ${fl ? `<p class="${fl.delay_min ? "pill warn" : "pill"}">Flight ${fl.code} · ${fl.delay_min ? "delayed " + fl.delay_min + " min" : "on time"} · driver wait ${b.live.wait_min} min</p>` : ""}
+        ${b.live.incident ? `<p class="pill red">Accident reported · replacement ${b.live.replacement ? b.live.replacement.first + " · " + b.live.replacement.plate : "sourcing"}</p>` : ""}
+        ${LIV.renderAlerts(b)}
+        <p class="comment">OTP ${b.otp} · ${b.live.km} km · expected pickup ${b.live.expected_pickup}</p>
+        ${LIV.actionGrid(b.id)}
+        <h3>Driver comments</h3>
+        ${LIV.renderComments(b)}
+        ${LIV.reviewForm(b.id)}`;
+      LIV.bindOps(document.getElementById("sheet"), b.id, tick);
+      const send = document.getElementById("rvSend");
+      if (send) send.onclick = async () => {
+        await VELORA.post("/api/bookings/" + b.id + "/review", { driver: Number(rvStars.value), text: rvText.value, name: "Web guest" });
+        tick();
+      };
+    }
+    tick().catch(() => { document.getElementById("sheet").textContent = "Trip not found."; });
+    setInterval(() => { if (id) tick().catch(() => {}); }, 4000);
+  </script>
+</body>
+</html>

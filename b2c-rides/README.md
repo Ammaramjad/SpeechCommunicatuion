@@ -1,21 +1,29 @@
-# RideLook — B2C Taxi & Car Booking Demos
+# RideLook Taiwan — B2C + Fleet OS
 
-Customer-facing **B2C** demos inspired by Klook’s look, focused only on **taxi and car booking** (no attractions, SIM cards, or other categories).
+Klook-style **transport-only** demo for Taiwan.
 
-## Two demos
+- Currency: **TWD (NT$)**
+- Languages: **繁體中文** and **English**
+- One backend for website, guest app, Fleet OS dispatch, and driver app
 
-| Demo | File | What to show the customer |
-| --- | --- | --- |
-| **A — Transfer Marketplace** | `marketplace.html` | Airport pickup/drop, hourly cars, intercity, listings, vehicle page, checkout |
-| **B — Instant Taxi** | `taxi.html` | City taxi now: map, fare estimate, vehicle class, driver match, live tracking |
-
-Open `index.html` first to pick a demo.
-
-## Run locally
+## Run
 
 ```bash
 cd b2c-rides
-python3 -m http.server 4173
+pip install fastapi uvicorn
+python3 server.py
 ```
 
-Then visit http://localhost:4173
+Open http://127.0.0.1:4173
+
+| Surface | URL | Role |
+| --- | --- | --- |
+| Hub | `/` | Pick a demo |
+| Website | `/web.html` | Guest bookings (Klook-like) |
+| App | `/app.html` | Guest phone bookings |
+| Fleet OS | `/dispatch.html` | Live jobs, assign, phone book-in, GMV |
+| Driver | `/driver.html` | Accept / arrive / complete |
+
+Promo codes: `WELCOME`, `TPE200`, `FAMILY`. Night surcharge 20% between 23:00–06:00.
+
+Facebook reel links could not be fetched here; UI follows Klook Taiwan (客路) orange marketplace + phone app patterns, plus a Fleet OS dispatch console.

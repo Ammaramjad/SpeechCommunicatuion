@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Available cars — VELORA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/assets/css/main.css"/>
+</head>
+<body>
+  <div id="chrome-header"></div>
+  <main class="wrap split" id="main">
+    <aside class="filters" aria-label="Filters">
+      <h3>Filters</h3>
+      <label class="field">Price max <input type="range" id="pmax" min="400" max="9000" value="9000"/></label>
+      <label><input type="checkbox" id="instant" checked/> Instant confirmation</label><br/>
+      <label><input type="checkbox" id="cancel" checked/> Free cancellation</label><br/>
+      <label><input type="checkbox" id="meet"/> Meet & greet</label><br/>
+      <label><input type="checkbox" id="ev"/> Electric</label><br/>
+      <label><input type="checkbox" id="prem"/> Premium</label><br/>
+      <label><input type="checkbox" id="wheel"/> Wheelchair-friendly</label>
+      <div class="field">Sort
+        <select id="sort">
+          <option value="rec">Recommended</option>
+          <option value="price">Price low–high</option>
+          <option value="phigh">Price high–low</option>
+          <option value="rate">Highest rated</option>
+          <option value="pop">Most popular</option>
+        </select>
+      </div>
+      <button class="btn btn-g btn-block" id="modify">Edit search</button>
+    </aside>
+    <div>
+      <div class="filter-bar"><button class="btn btn-g" type="button" id="openFilters">Filters</button></div>
+      <p class="sub" id="summary"></p>
+      <div id="list"><div class="skel" style="height:120px;margin-bottom:12px"></div><div class="skel" style="height:120px"></div></div>
+      <p class="sub" id="empty" hidden>No vehicles available for this time. Try another hour or class, or contact support.</p>
+    </div>
+  </main>
+  <div id="chrome-footer"></div>
+  <script src="/assets/js/core.js"></script>
+  <script src="/assets/js/results.js"></script>
+</body>
+</html>

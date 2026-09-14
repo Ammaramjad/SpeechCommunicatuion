@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" class="ios-page">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-title" content="VELORA"/>
+  <title>VELORA App</title>
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="theme-color" content="#1f4e46"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="/assets/css/apple.css"/>
+</head>
+<body class="ios-page">
+  <div class="ios-stage">
+    <div class="device" id="device">
+      <div class="device-screen">
+        <div class="island" id="island"></div>
+        <div class="ios-body" id="body"></div>
+        <nav class="ios-tab" id="tabs"></nav>
+      </div>
+    </div>
+  </div>
+  <p style="position:fixed;left:16px;bottom:12px;color:#86868b;font:12px/1.4 -apple-system,sans-serif">
+    Same bookings as the website · <a href="/" style="color:#0a84ff">Open VELORA web</a>
+  </p>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/assets/js/core.js"></script>
+  <script src="/assets/js/live.js"></script>
+  <script src="/assets/js/app.js"></script>
+</body>
+</html>

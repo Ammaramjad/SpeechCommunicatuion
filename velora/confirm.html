@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Confirmed — VELORA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/assets/css/main.css"/>
+  <link rel="stylesheet" href="/assets/css/apple.css"/>
+</head>
+<body>
+  <div id="chrome-header"></div>
+  <main class="ok" id="box"><div class="skel" style="height:200px"></div></main>
+  <div id="chrome-footer"></div>
+  <script src="/assets/js/core.js"></script>
+  <script>
+    document.getElementById("chrome-header").innerHTML = headerHTML();
+    document.getElementById("chrome-footer").innerHTML = footerHTML();
+    bindChrome();
+    const id = new URLSearchParams(location.search).get("id");
+    localStorage.setItem("vl-live", id || "");
+    VELORA.get("/api/bookings/" + encodeURIComponent(id)).then((b) => {
+      const qr = `<svg viewBox="0 0 80 80" width="88" height="88" aria-label="QR">${[...b.id].map((ch,i)=>`<rect x="${(i%8)*10}" y="${Math.floor(i/8)*10}" width="8" height="8" fill="${(ch.charCodeAt(0)%2)?"#1f4e46":"#c9a27a"}"/>`).join("")}</svg>`;
+      const live = b.live || {};
+      const drv = b.driver ? `
+        <div class="voucher" style="margin-top:12px;text-align:left">
+          <p class="pill">${live.headline || "Driver assigned"}</p>
+          <p><img src="${b.driver.photo}" alt="" width="48" height="48" style="border-radius:50%;vertical-align:middle;margin-right:8px"/>
+          <b>${b.driver.first}</b> ★ ${b.driver.rating} · ${b.driver.model || ""} ${b.driver.plate || ""}</p>
+          ${live.flight ? `<p class="sub">Flight ${live.flight.code} · ${live.flight.delay_min ? live.flight.delay_min + " min late" : "on time"}</p>` : ""}
+        </div>` : `<p class="sub">Matching a chauffeur — live map updates automatically.</p>`;
+      document.getElementById("box").innerHTML = `
+        <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="34" fill="#eef4f2"/><path d="M20 38 l12 12 22-24" fill="none" stroke="#1f4e46" stroke-width="4" stroke-dasharray="80" stroke-dashoffset="80" style="animation:checkdraw .8s forwards ease"/></svg>
+        <h1 class="xl">${VELORA.t("confirmed")}</h1>
+        <p>Booking reference <b>${b.id}</b> · ${b.channel || "web"}</p>
+        <div class="voucher" id="voucher">
+          ${qr}
+          <p>${b.pickup.name} → ${b.dest.name}</p>
+          <p>${b.when} · ${b.class.name} · ${b.pax} pax · ${b.bags} bags</p>
+          <p>OTP ${b.otp} · ${b.quote.symbol}${b.quote.breakdown.total.toLocaleString()}</p>
+          <p>Emergency +886-2-555-0100 · Free cancel &gt;24h</p>
+        </div>
+        ${drv}
+        <p>
+          <a class="btn btn-p" href="/track.html?id=${encodeURIComponent(b.id)}">${VELORA.t("track")}</a>
+          <a class="btn btn-p" href="/app.html?id=${encodeURIComponent(b.id)}">Open in app</a>
+          <a class="btn btn-g" href="/account.html">View booking</a>
+          <button class="btn btn-g" onclick="window.print()">${VELORA.t("voucher")}</button>
+          <a class="btn btn-g" id="calBtn" href="#">Add to calendar</a>
+          <a class="btn btn-g" href="/help.html">Support</a>
+        </p>
+        <p class="sub">Create an account to manage this booking · confirmation emailed to ${b.email}</p>`;
+      const start = (b.when || "").replace(/[-:]/g, "").replace("T", "T") + "00";
+      const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:VELORA ${b.class.name}\nDTSTART:${start}\nLOCATION:${b.pickup.name}\nDESCRIPTION:Booking ${b.id}\nEND:VEVENT\nEND:VCALENDAR`;
+      const cal = document.getElementById("calBtn");
+      if (cal) cal.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+    }).catch(() => { document.getElementById("box").textContent = "Booking not found."; });
+  </script>
+</body>
+</html>
