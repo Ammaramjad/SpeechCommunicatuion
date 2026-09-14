@@ -43,6 +43,7 @@ async function boot() {
 }
 
 function go(params) {
+  const trip = (document.querySelector('[name=trip]:checked') || {}).value === "round";
   const q = new URLSearchParams({
     service: params.service || state.service,
     pickup_id: params.pickup_id,
@@ -50,8 +51,13 @@ function go(params) {
     when: params.when || document.getElementById("when").value,
     pax: params.pax || document.getElementById("pax").value,
     bags: params.bags || document.getElementById("bags").value,
-    roundtrip: params.roundtrip || (document.querySelector('[name=trip]:checked') || {}).value === "round",
+    hours: params.hours || document.querySelector('[name=hours]').value,
+    roundtrip: String(params.roundtrip ?? trip),
+    return_when: document.getElementById("returnWhen").value || "",
     mode: (document.querySelector('[name=mode]:checked') || {}).value || "pickup",
+    flight: (document.querySelector('[name=flight]') || {}).value || "",
+    meet: String(document.querySelector('[name=meet]')?.checked !== false),
+    track: String(document.querySelector('[name=track]')?.checked !== false),
     currency: VELORA.currency,
   });
   VELORA.saveSearch(Object.fromEntries(q));
@@ -71,9 +77,10 @@ document.getElementById("swap").onclick = () => {
   const t = a.value; a.value = b.value; b.value = t;
 };
 document.querySelectorAll('[name=trip]').forEach((r) => r.onchange = () => {
-  document.getElementById("returnWrap").classList.toggle("hidden", r.value !== "round" && !document.querySelector('[name=trip][value=round]').checked);
+  const round = document.querySelector('[name=trip][value=round]').checked;
+  document.getElementById("returnWrap").classList.toggle("hidden", !round);
 });
-document.getElementById("searchForm").onsubmit = (e) => {
+document.getElementById("search").onsubmit = (e) => {
   e.preventDefault();
   go({
     pickup_id: idFromInput(document.getElementById("pickup").value),

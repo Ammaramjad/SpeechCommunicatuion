@@ -35,6 +35,18 @@ def test_guest_booking_and_retrieve():
     assert got["quote"]["breakdown"]["total"] > 0
 
 
+def test_roundtrip_doubles_total():
+    one = client.post("/api/quote", json={"pickup_id": "tpe", "dest_id": "taipei-101", "class_id": "standard", "when": "2026-09-16T10:00"}).json()
+    two = client.post("/api/quote", json={"pickup_id": "tpe", "dest_id": "taipei-101", "class_id": "standard", "when": "2026-09-16T10:00", "roundtrip": True}).json()
+    assert abs(two["breakdown"]["total"] - one["breakdown"]["total"] * 2) <= 2
+
+
+def test_stop_increases_price():
+    base = client.post("/api/quote", json={"pickup_id": "tpe", "dest_id": "taipei-101", "class_id": "standard"}).json()
+    stop = client.post("/api/quote", json={"pickup_id": "tpe", "dest_id": "taipei-101", "class_id": "standard", "stops": ["ximen"]}).json()
+    assert stop["breakdown"]["total"] > base["breakdown"]["total"]
+
+
 def test_login_and_fleet_os_attached():
     auth = client.post("/api/auth/login", json={"email": "admin@velora.demo", "password": "demo"}).json()
     assert auth["user"]["role"] == "admin"

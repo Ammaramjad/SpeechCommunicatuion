@@ -21,7 +21,7 @@
         <p class="badge">Private cars · professional drivers</p>
         <h1 id="heroTitle">Your private ride, wherever you go.</h1>
         <p class="lede" id="heroLede">Book trusted professional drivers for airport transfers, city rides, business travel and private journeys.</p>
-        <form class="search" id="searchForm" aria-label="Ride search">
+        <form class="search" id="search" aria-label="Ride search">
           <div class="tabs" role="tablist">
             <button class="tab" type="button" role="tab" aria-selected="true" data-service="airport">Airport Transfer</button>
             <button class="tab" type="button" role="tab" aria-selected="false" data-service="p2p">Point-to-Point</button>
@@ -51,7 +51,7 @@
             <label><input type="checkbox" name="track" checked/> Track my flight automatically</label>
             <label><input type="checkbox" name="meet" checked/> Meet & greet</label>
             <label id="hoursWrap" class="hidden">Hours <input type="number" name="hours" min="4" max="12" value="8"/></label>
-            <div id="returnWrap" class="hidden">Return <input type="datetime-local" name="return_when"/></div>
+            <div id="returnWrap" class="hidden field">Return date & time <input type="datetime-local" name="return_when" id="returnWhen"/></div>
           </div>
           <datalist id="locs"></datalist>
           <p class="sub" id="recent"></p>

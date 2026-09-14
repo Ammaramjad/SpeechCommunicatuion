@@ -13,6 +13,9 @@ const body = {
   bags: Number(q.bags || 2),
   hours: Number(q.hours || 8),
   roundtrip: q.roundtrip === "true",
+  return_when: q.return_when || "",
+  flight: q.flight || "",
+  meet: q.meet !== "false",
   currency: VELORA.currency,
 };
 
@@ -42,6 +45,7 @@ function draw() {
   if (ev) list = list.filter((r) => r.class.ev);
   if (prem) list = list.filter((r) => r.class.premium);
   if (wheel) list = list.filter((r) => r.class.wheelchair);
+  if (document.getElementById("meet").checked) list = list.filter((r) => r.class.meet);
   const sort = document.getElementById("sort").value;
   list.sort((a, b) => {
     if (sort === "price") return a.price.breakdown.total - b.price.breakdown.total;
@@ -78,4 +82,6 @@ function draw() {
   if (el) el.addEventListener("change", draw);
 });
 document.getElementById("modify").onclick = () => location.href = "/#search";
+const openF = document.getElementById("openFilters");
+if (openF) openF.onclick = () => document.querySelector(".filters").classList.toggle("open");
 run();

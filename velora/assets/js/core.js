@@ -80,6 +80,7 @@ function headerHTML(active) {
       <a href="/account.html">${VELORA.t("bookings")}</a>
       <a href="/help.html">${VELORA.t("help")}</a>
     </nav>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu">Menu</button>
     <div class="tools">
       <select class="chip" id="langSel" aria-label="Language">
         <option value="en">EN</option><option value="zh-TW">繁中</option><option value="zh-CN">简中</option>
@@ -92,7 +93,15 @@ function headerHTML(active) {
       <a class="chip" href="/help.html">${VELORA.t("support")}</a>
       <a class="btn btn-p" href="/account.html">${VELORA.t("signin")}</a>
     </div>
-  </header>`;
+  </header>
+  <div class="nav-drawer" id="navDrawer" hidden>
+    <a href="/#search">${VELORA.t("book")}</a>
+    <a href="/results.html?service=airport">${VELORA.t("airport")}</a>
+    <a href="/results.html?service=hourly">${VELORA.t("hourly")}</a>
+    <a href="/results.html?service=p2p">${VELORA.t("city")}</a>
+    <a href="/account.html">${VELORA.t("bookings")}</a>
+    <a href="/help.html">${VELORA.t("help")}</a>
+  </div>`;
 }
 
 function footerHTML() {
@@ -109,6 +118,16 @@ function bindChrome() {
   const ccy = document.getElementById("ccySel");
   if (lang) { lang.value = VELORA.lang; lang.onchange = () => { VELORA.lang = lang.value; localStorage.setItem("vl-lang", lang.value); document.documentElement.lang = lang.value; document.documentElement.dir = lang.value === "ar" ? "rtl" : "ltr"; location.reload(); }; }
   if (ccy) { ccy.value = VELORA.currency; ccy.onchange = () => { VELORA.currency = ccy.value; localStorage.setItem("vl-ccy", ccy.value); location.reload(); }; }
+  const menu = document.getElementById("menuBtn");
+  const drawer = document.getElementById("navDrawer");
+  if (menu && drawer) {
+    menu.onclick = () => {
+      const open = drawer.hasAttribute("hidden");
+      if (open) drawer.removeAttribute("hidden");
+      else drawer.setAttribute("hidden", "");
+      menu.setAttribute("aria-expanded", String(open));
+    };
+  }
 }
 
 function locOptions(rows, selected) {

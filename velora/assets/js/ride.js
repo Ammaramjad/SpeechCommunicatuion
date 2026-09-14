@@ -15,7 +15,7 @@ const form = {
   roundtrip: q.roundtrip === "true",
   class_id: q.class_id || "standard",
   currency: VELORA.currency,
-  extras: q.meet === "true" || true ? ["meet"] : [],
+  extras: q.meet !== "false" ? ["meet"] : [],
   stops: [],
   promo: "",
   first: "Emma", last: "Chen", email: "emma@velora.demo", phone: "+886910000111",
@@ -48,6 +48,9 @@ async function boot() {
     <h3>Optional extras</h3>
     ${catalog.extras.map((e) => `<label style="display:block;margin:6px 0"><input type="checkbox" data-ex="${e.id}" ${form.extras.includes(e.id)?"checked":""}/> ${e.name} · ${VELORA.money(e.price,"TWD")}</label>`).join("")}
     <h3>Stops</h3>
+    <div class="field">Add stop
+      <select id="stopPick"><option value="">Choose a stop</option>${catalog.locations.map((l) => `<option value="${l.id}">${l.name}</option>`).join("")}</select>
+    </div>
     <button class="btn btn-g" type="button" id="addStop">Add stop</button>
     <div id="stopList"></div>
     <label>Promo <input id="promo" placeholder="VELORA10 / AIRPORT200 / NEWGUEST"/></label>
@@ -57,8 +60,12 @@ async function boot() {
     refreshQuote();
   });
   document.getElementById("addStop").onclick = () => {
-    const id = prompt("Location id (e.g. ximen, w-hotel, office-nangang)", "ximen");
-    if (id) { form.stops.push(id); renderStops(); refreshQuote(); }
+    const id = document.getElementById("stopPick").value;
+    if (id && !form.stops.includes(id) && id !== form.pickup_id && id !== form.dest_id) {
+      form.stops.push(id);
+      renderStops();
+      refreshQuote();
+    }
   };
   document.getElementById("promo").onchange = () => { form.promo = document.getElementById("promo").value; refreshQuote(); };
   document.getElementById("to2").onclick = () => show(2);
@@ -97,7 +104,8 @@ async function boot() {
 }
 
 function renderStops() {
-  document.getElementById("stopList").innerHTML = form.stops.map((s, i) => `<div>${i + 1}. ${s} <button type="button" data-rm="${i}">remove</button></div>`).join("");
+  const names = Object.fromEntries((catalog?.locations || []).map((l) => [l.id, l.name]));
+  document.getElementById("stopList").innerHTML = form.stops.map((s, i) => `<div>${i + 1}. ${names[s] || s} <button type="button" class="btn btn-g" data-rm="${i}">remove</button></div>`).join("");
   document.querySelectorAll("[data-rm]").forEach((b) => b.onclick = () => { form.stops.splice(Number(b.dataset.rm), 1); renderStops(); refreshQuote(); });
 }
 

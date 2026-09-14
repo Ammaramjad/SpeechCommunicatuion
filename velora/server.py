@@ -191,15 +191,21 @@ def price_quote(body: dict[str, Any]) -> dict[str, Any]:
             extras_fee += ex["price"]
             extra_rows.append(ex)
     sub = base + airport_fee + night_fee + stop_fee + extras_fee
+    if body.get("roundtrip"):
+        sub *= 2
+        base *= 2
+        airport_fee *= 2
+        night_fee *= 2
+        stop_fee *= 2
+        extras_fee *= 2
     service_fee = int(sub * PRICING["service_fee"])
     discount = 0
     promo = PROMOS.get((body.get("promo") or "").upper())
     if promo and sub >= promo["min"]:
         discount = promo["value"] if promo["type"] == "flat" else int(sub * promo["value"] / 100)
+        if promo["type"] == "flat" and body.get("roundtrip"):
+            discount *= 2
     total = max(0, sub + service_fee - discount)
-    if body.get("roundtrip"):
-        total *= 2
-        base *= 2
     curr = body.get("currency") or "TWD"
     return {
         "currency": curr,
@@ -234,6 +240,7 @@ class SearchIn(BaseModel):
     bags: int = 2
     hours: int = 4
     roundtrip: bool = False
+    return_when: str = ""
     currency: str = "TWD"
     extras: list[str] = Field(default_factory=list)
     stops: list[str] = Field(default_factory=list)
