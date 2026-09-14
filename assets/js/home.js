@@ -14,6 +14,17 @@ function idFromInput(val) {
 
 async function boot() {
   state.catalog = await VELORA.get("/api/catalog");
+  try {
+    const m = await VELORA.get("/api/admin/metrics");
+    const el = document.getElementById("kpis");
+    if (el) {
+      const tiles = el.querySelectorAll("b");
+      tiles[0].textContent = m.drivers_online;
+      tiles[1].textContent = m.active;
+      tiles[2].textContent = "NT$" + m.gmv.toLocaleString();
+      tiles[3].textContent = "NT$" + m.avg.toLocaleString();
+    }
+  } catch (_) {}
   document.getElementById("locs").innerHTML = state.catalog.locations.map((l) => `<option value="${l.name}"></option>`).join("");
   document.getElementById("pickup").value = "Taoyuan International Airport (TPE)";
   document.getElementById("dest").value = "Taipei 101 / Xinyi";

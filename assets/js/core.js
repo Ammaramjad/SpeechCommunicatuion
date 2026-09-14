@@ -80,6 +80,9 @@ function headerHTML(active) {
       <a href="/app.html">App</a>
       <a href="/account.html">${VELORA.t("bookings")}</a>
       <a href="/help.html">${VELORA.t("help")}</a>
+      <a href="/driver.html">Drivers</a>
+      <a href="/admin.html">Ops</a>
+      <a href="${VELORA.fleet}" target="_blank" rel="noopener">Fleet OS</a>
     </nav>
     <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu">Menu</button>
     <div class="tools">
@@ -103,6 +106,9 @@ function headerHTML(active) {
     <a href="/app.html">App</a>
     <a href="/account.html">${VELORA.t("bookings")}</a>
     <a href="/help.html">${VELORA.t("help")}</a>
+    <a href="/driver.html">Drivers</a>
+    <a href="/admin.html">Ops</a>
+    <a href="${VELORA.fleet}" target="_blank" rel="noopener">Fleet OS</a>
   </div>`;
 }
 
