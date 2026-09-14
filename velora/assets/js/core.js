@@ -77,6 +77,8 @@ function headerHTML(active) {
       <a href="/results.html?service=airport">${VELORA.t("airport")}</a>
       <a href="/results.html?service=hourly">${VELORA.t("hourly")}</a>
       <a href="/results.html?service=p2p">${VELORA.t("city")}</a>
+      <a href="/results.html?service=p2p">Intercity</a>
+      <a href="/help.html#corporate">Corporate</a>
       <a href="/app.html">App</a>
       <a href="/account.html">${VELORA.t("bookings")}</a>
       <a href="/help.html">${VELORA.t("help")}</a>
@@ -103,6 +105,8 @@ function headerHTML(active) {
     <a href="/results.html?service=airport">${VELORA.t("airport")}</a>
     <a href="/results.html?service=hourly">${VELORA.t("hourly")}</a>
     <a href="/results.html?service=p2p">${VELORA.t("city")}</a>
+    <a href="/results.html?service=p2p">Intercity</a>
+    <a href="/help.html#corporate">Corporate</a>
     <a href="/app.html">App</a>
     <a href="/account.html">${VELORA.t("bookings")}</a>
     <a href="/help.html">${VELORA.t("help")}</a>

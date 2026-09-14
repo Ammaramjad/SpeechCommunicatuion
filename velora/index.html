@@ -16,6 +16,7 @@
 </head>
 <body>
   <div id="chrome-header"></div>
+  <nav class="subnav" id="subnav" aria-label="Discover"></nav>
   <main id="main">
     <section class="hero">
       <div class="wrap">
@@ -29,7 +30,9 @@
           <div class="kpi-tile"><span>Avg booking</span><b>—</b></div>
         </div>
         <form class="search" id="search" aria-label="Ride search">
-          <div class="tabs" role="tablist">
+          <div class="service-tabs" id="serviceTabs" role="tablist"></div>
+          <div class="region-pills" id="regionPills" aria-label="Region"></div>
+          <div class="tabs" role="tablist" id="coreTabs">
             <button class="tab" type="button" role="tab" aria-selected="true" data-service="airport">Airport Transfer</button>
             <button class="tab" type="button" role="tab" aria-selected="false" data-service="p2p">Point-to-Point</button>
             <button class="tab" type="button" role="tab" aria-selected="false" data-service="hourly">Hourly Hire</button>
@@ -65,13 +68,28 @@
         </form>
       </div>
     </section>
+    <section class="sec wrap" id="destinations">
+      <div class="sec-head"><h2>Where to next?</h2><a class="link-more" href="/results.html?service=airport">See more</a></div>
+      <div class="dest-carousel" id="destCarousel"></div>
+    </section>
+    <section class="sec wrap">
+      <div class="sec-head"><h2>Travelers' favorite choices</h2><a class="link-more" href="/results.html?service=airport">See more</a></div>
+      <div class="fav-grid" id="favorites"></div>
+    </section>
+    <section class="sec wrap">
+      <div class="sec-head"><h2>Promo codes</h2><a class="link-more" href="/help.html#promo">View all</a></div>
+      <div class="promo-shelf" id="promos"></div>
+    </section>
+    <section class="sec wrap">
+      <div class="benefit-row" id="benefits"></div>
+    </section>
     <section class="sec wrap">
       <div class="trust">
         <div>Professional drivers</div><div>Upfront pricing</div><div>24/7 support</div>
         <div>Free cancellation on eligible rides</div><div>Secure payments · no card stored</div>
       </div>
     </section>
-    <section class="sec wrap">
+    <section class="sec wrap" id="popularRoutes">
       <h2>Popular routes</h2>
       <p class="sub">Live from the VELORA catalog — starting prices in your currency.</p>
       <div class="cards" id="popular"></div>
@@ -89,12 +107,12 @@
       </div>
     </section>
     <section class="sec wrap">
-      <h2>How it works</h2>
-      <div class="how">
-        <div><div class="num">1</div><h3>Search</h3><p class="sub">Pickup, destination, time.</p></div>
-        <div><div class="num">2</div><h3>Choose</h3><p class="sub">Compare classes, extras, policies.</p></div>
-        <div><div class="num">3</div><h3>Ride</h3><p class="sub">Voucher, driver, live tracking.</p></div>
-      </div>
+      <h2>How to book</h2>
+      <div class="how" id="howBook"></div>
+    </section>
+    <section class="sec wrap">
+      <h2>Trending on VELORA</h2>
+      <div class="trending-tags" id="trending"></div>
     </section>
     <section class="sec wrap">
       <h2>Verified reviews</h2>
@@ -114,6 +132,12 @@
       <div class="acc" id="faq"></div>
     </section>
   </main>
+  <aside class="app-widget" id="appWidget" aria-label="Download app">
+    <button class="app-close" type="button" id="appClose" aria-label="Close">×</button>
+    <b>Your all-in-one ride app</b>
+    <p class="sub">Same live map, driver card &amp; Fleet OS dispatch.</p>
+    <a class="btn btn-p btn-block" href="/app.html">Open VELORA app</a>
+  </aside>
   <div id="chrome-footer"></div>
   <script src="/assets/js/core.js"></script>
   <script src="/assets/js/home.js"></script>

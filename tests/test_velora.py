@@ -91,3 +91,41 @@ def test_login_and_fleet_os_attached():
     assert "fleet-dispatch-demo-8c37.surge.sh" in meta["fleet_os"]
     metrics = client.get("/api/admin/metrics").json()
     assert "fleet_os" in metrics
+
+
+def test_velora_booking_syncs_to_fleet_os():
+    b = client.post("/api/bookings", json={
+        "pickup_id": "tpe", "dest_id": "taipei-101", "when": "2026-09-16T10:00",
+        "first": "Ada", "last": "Lovelace", "email": "ada@example.com", "phone": "+1",
+        "class_id": "business", "terms": True, "channel": "velora",
+    }).json()
+    assert b["fleet_job_id"].startswith("FO-")
+    jobs = client.get("/api/fleet/jobs").json()
+    assert any(j["booking_id"] == b["id"] and j["channel"] == "velora" for j in jobs)
+
+
+def test_klook_order_ingest_and_fleet_sync():
+    payload = {
+        "external_id": "KL-998877",
+        "pickup_name": "Taoyuan International Airport (TPE)",
+        "dest_name": "Taipei 101 / Xinyi",
+        "when": "2026-09-17T14:00",
+        "first": "Klook", "last": "Guest", "email": "guest@klook.demo", "phone": "+886900000001",
+        "class_id": "standard", "flight": "CI011", "track_flight": True,
+    }
+    r = client.post("/api/channels/klook/orders", json=payload, headers={"X-Partner-Key": "velora-demo-partner-key"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["booking"]["channel"] == "klook"
+    assert body["booking"]["external_id"] == "KL-998877"
+    assert body["fleet_job"]["channel"] == "klook"
+    ch = client.get("/api/admin/channels").json()
+    assert ch["bookings_by_channel"].get("klook", 0) >= 1
+
+
+def test_catalog_has_discovery_sections():
+    cat = client.get("/api/catalog").json()
+    assert cat["destinations"]
+    assert cat["favorites"]
+    assert cat["service_tabs"]
+    assert cat["promo_shelf"]
