@@ -77,6 +77,7 @@ function headerHTML(active) {
       <a href="/results.html?service=airport">${VELORA.t("airport")}</a>
       <a href="/results.html?service=hourly">${VELORA.t("hourly")}</a>
       <a href="/results.html?service=p2p">${VELORA.t("city")}</a>
+      <a href="/app.html">App</a>
       <a href="/account.html">${VELORA.t("bookings")}</a>
       <a href="/help.html">${VELORA.t("help")}</a>
     </nav>
@@ -99,6 +100,7 @@ function headerHTML(active) {
     <a href="/results.html?service=airport">${VELORA.t("airport")}</a>
     <a href="/results.html?service=hourly">${VELORA.t("hourly")}</a>
     <a href="/results.html?service=p2p">${VELORA.t("city")}</a>
+    <a href="/app.html">App</a>
     <a href="/account.html">${VELORA.t("bookings")}</a>
     <a href="/help.html">${VELORA.t("help")}</a>
   </div>`;
@@ -108,7 +110,7 @@ function footerHTML() {
   return `<footer class="footer"><div class="wrap fgrid">
     <div><b>VELORA</b><a href="/help.html">About</a><a href="/help.html">Contact</a><a href="/help.html">Careers</a></div>
     <div><b>Services</b><a href="/results.html?service=airport">Airport Transfer</a><a href="/results.html?service=p2p">City Transfer</a><a href="/results.html?service=hourly">Hourly Hire</a></div>
-    <div><b>Partners</b><a href="/driver.html">Driver</a><a href="/admin.html">Operator / Admin</a><a href="${VELORA.fleet}" target="_blank" rel="noopener">Fleet Dispatch</a></div>
+    <div><b>Partners</b><a href="/driver.html">Driver</a><a href="/admin.html">Operator / Admin</a><a href="/app.html">Customer app</a><a href="${VELORA.fleet}" target="_blank" rel="noopener">Fleet Dispatch</a></div>
     <div><b>Support</b><a href="/help.html">Help Center</a><a href="/help.html#cancel">Cancellation</a><a href="/help.html#terms">Terms</a><a href="/help.html#privacy">Privacy</a></div>
   </div><div class="wrap" style="margin-top:24px;opacity:.7">© VELORA · Private cars with professional drivers · Demo payments never store cards</div></footer>`;
 }

@@ -193,3 +193,10 @@ HELP = [
     {"id": "refund", "title": "Refund"},
     {"id": "account", "title": "Account"},
 ]
+
+DRIVER_REVIEWS = [
+    {"id": "rv1", "driver_id": "d01", "name": "E. Chen", "stars": 5, "text": "Wei was at T2 with a name sign before we cleared immigration.", "date": "2026-08-12", "verified": True, "punctuality": 5, "cleanliness": 5, "safety": 5},
+    {"id": "rv2", "driver_id": "d01", "name": "M. Sato", "stars": 5, "text": "Quiet cabin, water, and a perfect Xinyi drop-off.", "date": "2026-08-28", "verified": True, "punctuality": 5, "cleanliness": 5, "safety": 5},
+    {"id": "rv3", "driver_id": "d02", "name": "A. Khan", "stars": 4, "text": "Slight traffic delay, Mei messaged ETA twice.", "date": "2026-09-02", "verified": True, "punctuality": 4, "cleanliness": 5, "safety": 5},
+    {"id": "rv4", "driver_id": "d08", "name": "L. Park", "stars": 5, "text": "Yuna’s GLS was immaculate. Kids loved the booster.", "date": "2026-09-05", "verified": True, "punctuality": 5, "cleanliness": 5, "safety": 5},
+]
