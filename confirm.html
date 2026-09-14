@@ -33,10 +33,15 @@
         <p>
           <a class="btn btn-p" href="/account.html">View booking</a>
           <button class="btn btn-g" onclick="window.print()">${VELORA.t("voucher")}</button>
+          <a class="btn btn-g" id="calBtn" href="#">Add to calendar</a>
           <a class="btn btn-g" href="/track.html?id=${encodeURIComponent(b.id)}">${VELORA.t("track")}</a>
           <a class="btn btn-g" href="/help.html">Support</a>
         </p>
         <p class="sub">Create an account to manage this booking · confirmation emailed to ${b.email}</p>`;
+      const start = (b.when || "").replace(/[-:]/g, "").replace("T", "T") + "00";
+      const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:VELORA ${b.class.name}\nDTSTART:${start}\nLOCATION:${b.pickup.name}\nDESCRIPTION:Booking ${b.id}\nEND:VEVENT\nEND:VCALENDAR`;
+      const cal = document.getElementById("calBtn");
+      if (cal) cal.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
     }).catch(() => { document.getElementById("box").textContent = "Booking not found."; });
   </script>
 </body>
