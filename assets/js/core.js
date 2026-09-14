@@ -3,7 +3,10 @@ window.VELORA = {
   currency: localStorage.getItem("vl-ccy") || "TWD",
   token: localStorage.getItem("vl-token") || "",
   user: JSON.parse(localStorage.getItem("vl-user") || "none".replace("none", "null")),
+  apiBase: window.VELORA_API_BASE || "",
+  staticMode: /\.surge\.sh$/i.test(location.hostname),
   fleet: "https://fleet-dispatch-demo-8c37.surge.sh/",
+  publicUrl: "https://velora-private-rides.surge.sh/",
   I18N: {
     en: {
       book: "Book a Ride", airport: "Airport Transfer", hourly: "Hourly Hire", city: "City Transfer",
@@ -37,14 +40,26 @@ window.VELORA = {
     return pack[k] || this.I18N.en[k] || k;
   },
   async get(path) {
-    const r = await fetch(path, { headers: this.headers() });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
+    if (this.staticMode && window.VELORA_DEMO) return VELORA_DEMO.get(path);
+    try {
+      const r = await fetch(this.apiBase + path, { headers: this.headers() });
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    } catch (err) {
+      if (window.VELORA_DEMO) return VELORA_DEMO.get(path);
+      throw err;
+    }
   },
   async post(path, body) {
-    const r = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json", ...this.headers() }, body: JSON.stringify(body || {}) });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
+    if (this.staticMode && window.VELORA_DEMO) return VELORA_DEMO.post(path, body);
+    try {
+      const r = await fetch(this.apiBase + path, { method: "POST", headers: { "Content-Type": "application/json", ...this.headers() }, body: JSON.stringify(body || {}) });
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    } catch (err) {
+      if (window.VELORA_DEMO) return VELORA_DEMO.post(path, body);
+      throw err;
+    }
   },
   headers() {
     return this.token ? { Authorization: "Bearer " + this.token } : {};
