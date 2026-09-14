@@ -19,7 +19,8 @@ Open http://127.0.0.1:4173
 | Customer website | `/` |
 | Search results | `/results.html` |
 | Checkout | `/ride.html` |
-| App (light) | `/app.html` |
+| App (Apple-style live map) | `/app.html` |
+| Live tracking (web) | `/track.html?id=VR-…` |
 | Account | `/account.html` |
 | Driver | `/driver.html` |
 | Admin / dispatch link | `/admin.html` |
