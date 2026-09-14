@@ -24,7 +24,7 @@
     const LIV = window.VELORA_LIVE;
     const id = new URLSearchParams(location.search).get("id");
     const map = L.map("map").setView([25.04, 121.5], 11);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", { attribution: "© OSM / CARTO" }).addTo(map);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "© OpenStreetMap" }).addTo(map);
     async function tick() {
       const b = await VELORA.get("/api/bookings/" + encodeURIComponent(id) + "/live");
       LIV.paintMap(map, b);
