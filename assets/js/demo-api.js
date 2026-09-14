@@ -3,7 +3,8 @@ window.VELORA_DEMO = {
   catalog: null,
   async load() {
     if (!this.catalog) {
-      const r = await fetch("/data/catalog.json");
+      const base = window.VELORA_SITE_BASE || "";
+      const r = await fetch(base + "/data/catalog.json");
       this.catalog = await r.json();
     }
     return this.catalog;
