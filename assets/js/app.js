@@ -164,7 +164,7 @@ async function showLive(el) {
   el.className = "ios-body map-mode";
   el.innerHTML = `<div id="amap" class="hero-map"></div><div class="sheet" id="sheet"></div>`;
   map = L.map("amap", { zoomControl: false, attributionControl: false }).setView([25.04, 121.5], 11);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", { maxZoom: 18 }).addTo(map);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(map);
   const tick = async () => {
     const b = await VELORA.get("/api/bookings/" + encodeURIComponent(activeId) + "/live");
     island(b.live.headline.slice(0, 28));
