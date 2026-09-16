@@ -1,0 +1,14 @@
+name: lstm-eholf
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy=1.24.4
+  - matplotlib=3.8.4
+  - scikit-learn=1.3.2
+  - pyyaml=6.0.1
+  - pip
+  - pip:
+      - torch==2.2.2
+      - shap==0.42.1
+      - pytest==8.2.2

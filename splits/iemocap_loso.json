@@ -1,0 +1,14 @@
+{
+  "dataset": "IEMOCAP",
+  "protocol": "5-fold leave-one-session-out (LOSO). Each fold holds out one session (Ses01–Ses05) for testing. Validation uses one remaining session; training uses the rest. No speaker appears in both train and test.",
+  "sessions": ["Ses01", "Ses02", "Ses03", "Ses04", "Ses05"],
+  "classes": ["neutral", "sad", "happy", "angry"],
+  "class_totals": {
+    "neutral": 1708,
+    "sad": 1048,
+    "angry": 2952,
+    "happy": 1636,
+    "total": 7344
+  },
+  "note": "Utterance IDs are filled by scripts/build_official_splits.py from the licensed IEMOCAP release. Placeholder fold keys match the manuscript protocol."
+}
