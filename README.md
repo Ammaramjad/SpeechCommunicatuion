@@ -1,3 +1,15 @@
+# Research code
+
+This repository now also contains the **LSTM-EHOLF** reproduction package
+(multimodal emotion recognition). Start at [`lstm_eholf/README.md`](lstm_eholf/README.md)
+and regenerate Tables 2–17 / Figs. 3–7 with:
+
+```bash
+python reproduce.py --from-logs
+```
+
+---
+
 # MR-AVT for Speech Communication
 
 Complete methodology and PyTorch implementation of **Multi-Resolution Audio--Visual Transformer with Heterogeneous Graph Fusion for Robust Speech Emotion Recognition**.

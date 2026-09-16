@@ -1,0 +1,22 @@
+dataset: savee
+modalities: [A, V]
+num_classes: 7
+pca_k: 0
+lstm:
+  layers: 2
+  hidden: 128
+  dropout: 0.38
+  lr: 0.0031
+  l2: 0.00082
+  batch_size: 16
+  max_epochs: 100
+  patience: 10
+eholf:
+  population: 30
+  t_max: 100
+  beta: 1.5
+  aw_min: 0.3
+  aw_max: 0.9
+  aw_gamma: 2.0
+seeds: [0, 1, 2, 3, 4]
+fusion: concat

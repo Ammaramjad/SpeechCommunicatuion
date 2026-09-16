@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["mr_avt*"]
+include = ["mr_avt*", "lstm_eholf*", "preprocessing*", "eholf*", "explain*", "robustness*", "tables*", "figures*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

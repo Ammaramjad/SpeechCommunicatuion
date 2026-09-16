@@ -1,0 +1,26 @@
+dataset: demo
+modalities: [A, V, T]
+num_classes: 4
+pca_k: 12
+lstm:
+  layers: 1
+  hidden: 32
+  dropout: 0.2
+  lr: 0.001
+  l2: 0.0001
+  batch_size: 8
+  max_epochs: 3
+  patience: 2
+eholf:
+  population: 4
+  t_max: 3
+  beta: 1.5
+  aw_min: 0.3
+  aw_max: 0.9
+  aw_gamma: 2.0
+seeds: [0]
+fusion: concat
+shap:
+  coalitions: 32
+  background: 8
+  instances_per_fold: 16

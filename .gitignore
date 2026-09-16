@@ -9,3 +9,5 @@ dist/
 build/
 *.pt
 .DS_Store
+results/demo/
+results/local_compute.json

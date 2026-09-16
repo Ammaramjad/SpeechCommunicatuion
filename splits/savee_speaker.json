@@ -1,0 +1,17 @@
+{
+  "dataset": "SAVEE",
+  "protocol": "4-fold speaker-independent: each of DC, JE, JK, KL is the test speaker once. Text is never used (scripted read speech).",
+  "speakers": ["DC", "JE", "JK", "KL"],
+  "classes": ["neutral", "sad", "angry", "happy", "surprise", "fear", "disgust"],
+  "class_totals": {
+    "neutral": 120,
+    "sad": 60,
+    "angry": 60,
+    "happy": 60,
+    "surprise": 60,
+    "fear": 60,
+    "disgust": 60,
+    "total": 480
+  },
+  "modalities": "A+V"
+}
