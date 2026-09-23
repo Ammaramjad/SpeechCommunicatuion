@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="assets/js/hosting.js"></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Book — VELORA Mobility</title>
+  <meta name="description" content="Mobile-first booking for airport transfers, city rides and hourly hire."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/css/main.css"/>
+  <meta name="theme-color" content="#0f1728"/>
+</head>
+<body class="book-flow">
+  <div id="chrome-header"></div>
+  <main class="wrap book-wrap">
+    <header class="book-header">
+      <div class="steps-bar" aria-label="Booking progress">
+        <span class="step-dot on" data-step="1">1</span>
+        <span class="step-line"></span>
+        <span class="step-dot" data-step="2">2</span>
+        <span class="step-line"></span>
+        <span class="step-dot" data-step="3">3</span>
+      </div>
+      <p class="step-label" id="stepLabel">Trip details</p>
+    </header>
+    <section class="panel book-panel" id="panel1"></section>
+    <section class="panel book-panel hidden" id="panel2"></section>
+    <section class="panel book-panel hidden" id="panel3"></section>
+    <aside class="panel book-summary" id="summary"></aside>
+  </main>
+  <div id="chrome-footer"></div>
+  <script src="assets/js/demo-api.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/book.js"></script>
+</body>
+</html>
