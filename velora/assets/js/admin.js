@@ -144,7 +144,40 @@ async function paint() {
     panel.innerHTML = `<h1>Pricing engine</h1>
       <p>Base NT$420 · per km 28 · per min 6 · airport 80 · night 18% · stop 180 · service 4%.</p>
       <p>Fixed routes override distance (example TPE → Taipei 101 NT$1,380 before class multiplier).</p>
-      <p>Promos: VELORA10, AIRPORT200, NEWGUEST. Surge architecture ready, disabled.</p>`;
+      <p>Promos: VELORA10, AIRPORT200, NEWGUEST. Surge architecture ready, disabled.</p>
+      <p class="sub">Production rules are stored in SQL via <code>/api/v1/pricing/quote</code>.</p>`;
+  }
+  if (view === "opsv1") {
+    let dash = {};
+    let rows = [];
+    try {
+      if (!VELORA.token) {
+        const login = await VELORA.post("/api/v1/auth/login", { email: "admin@velora.demo", password: "demo" });
+        VELORA.token = login.token;
+        localStorage.setItem("vl-token", login.token);
+      }
+      dash = await fetch((VELORA.apiBase || "") + "/api/v1/ops/dashboard", { headers: VELORA.headers() }).then((r) => r.json());
+      rows = await fetch((VELORA.apiBase || "") + "/api/v1/ops/bookings?limit=20", { headers: VELORA.headers() }).then((r) => r.json());
+    } catch (e) {
+      panel.innerHTML = `<h1>Mobility API v1</h1><p class="sub">Start <code>python3 server.py</code> to use the production booking API.</p>`;
+      return;
+    }
+    panel.innerHTML = `<h1>Mobility Ops (API v1)</h1>
+      <div class="kpis">
+        <div class="kpi">Total bookings <b>${dash.total_bookings || 0}</b></div>
+        <div class="kpi">Unassigned <b>${dash.unassigned || 0}</b></div>
+        <div class="kpi">Drivers online <b>${dash.online_drivers || 0}</b></div>
+        <div class="kpi">GMV TWD <b>NT$${(dash.gmv_twd || 0).toLocaleString()}</b></div>
+      </div>
+      <p class="sub">Canonical bookings from SQLite · RBAC enforced · audit logged.</p>
+      ${(rows || []).map((b) => `<article class="panel" style="margin:10px 0">
+        <b>${b.reference}</b> <span class="status">${b.status}</span> · ${b.email}<br/>
+        ${b.pickup_id} → ${b.dest_id} · NT$${b.total_amount}
+        ${b.driver_id ? `<br/>Driver <b>${b.driver_id}</b>` : "<br/><span class='pill warn'>Unassigned</span>"}
+        <div class="ios-row" style="margin-top:8px">
+          <a class="btn btn-g" href="${VELORA.url("/track.html?id=" + encodeURIComponent(b.reference))}">Track</a>
+        </div>
+      </article>`).join("") || "<p>No v1 bookings yet. Use <a href='book.html'>book.html</a>.</p>"}`;
   }
 }
 

@@ -66,6 +66,24 @@ app.add_middleware(
 app.mount("/assets", StaticFiles(directory=ROOT / "assets"), name="assets")
 app.mount("/data", StaticFiles(directory=ROOT / "data"), name="data")
 
+
+@app.on_event("startup")
+def _mobility_startup() -> None:
+    from mobility.database import SessionLocal, init_db
+    from mobility.seed import seed_if_empty
+
+    init_db()
+    db = SessionLocal()
+    try:
+        seed_if_empty(db)
+    finally:
+        db.close()
+
+
+from mobility.api.v1.router import api_router  # noqa: E402
+
+app.include_router(api_router)
+
 PUBLIC_URL = os.environ.get("VELORA_PUBLIC_URL") or os.environ.get("RENDER_EXTERNAL_URL") or ""
 
 
@@ -1149,7 +1167,7 @@ def robots() -> PlainTextResponse:
 
 @app.get("/sitemap.xml")
 def sitemap() -> Response:
-    urls = ["/", "/results.html", "/help.html", "/airport-transfer/taiwan/tpe-taoyuan-airport"]
+    urls = ["/", "/book.html", "/results.html", "/help.html", "/airport-transfer/taiwan/tpe-taoyuan-airport"]
     xml = '<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(f"<url><loc>{u}</loc></url>" for u in urls) + "</urlset>"
     return Response(xml, media_type="application/xml")
 

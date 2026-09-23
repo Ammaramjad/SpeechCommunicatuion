@@ -224,7 +224,7 @@ function go(params) {
   });
   VELORA.saveSearch(Object.fromEntries(q));
   VELORA.track("search_started", Object.fromEntries(q));
-  location.href = VELORA.url("/results.html?" + q.toString());
+  location.href = VELORA.url("/book.html?" + q.toString());
 }
 
 document.querySelectorAll("#coreTabs .tab").forEach((t) => t.onclick = () => {
